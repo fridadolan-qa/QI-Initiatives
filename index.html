@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QI Initiative Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#f8f7f4;--surface:#fff;--border:rgba(0,0,0,0.1);--border-md:rgba(0,0,0,0.18);
+  --text:#1a1916;--muted:#6b6860;--hint:#9c9a94;
+  --accent:#1D9E75;--accent-light:#E1F5EE;--accent-text:#085041;
+  --purple:#534AB7;--purple-light:#EEEDFE;--purple-text:#26215C;
+  --coral:#D85A30;--coral-light:#FAECE7;--coral-text:#4A1B0C;
+  --amber:#BA7517;--amber-light:#FAEEDA;--amber-text:#412402;
+  --blue:#185FA5;--blue-light:#E6F1FB;--blue-text:#042C53;
+  --gray-light:#F1EFE8;--gray-text:#2C2C2A;
+  --red:#A32D2D;--red-light:#FCEBEB;--red-text:#501313;
+  --green:#3B6D11;--green-light:#EAF3DE;--green-text:#173404;
+  --r:8px;--rl:12px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1e1e1c;--surface:#2a2a28;--border:rgba(255,255,255,0.1);--border-md:rgba(255,255,255,0.18);
+    --text:#f0efe9;--muted:#a0a09a;--hint:#6e6e68;
+    --accent-light:#04342C;--accent-text:#9FE1CB;
+    --purple-light:#26215C;--purple-text:#CECBF6;
+    --coral-light:#4A1B0C;--coral-text:#F5C4B3;
+    --amber-light:#412402;--amber-text:#FAC775;
+    --blue-light:#042C53;--blue-text:#B5D4F4;
+    --gray-light:#2C2C2A;--gray-text:#D3D1C7;
+    --red-light:#501313;--red-text:#F7C1C1;
+    --green-light:#173404;--green-text:#C0DD97;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
+.app{max-width:1040px;margin:0 auto;padding:24px 16px 48px;}
+.header{margin-bottom:20px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.header-left h1{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.3px;}
+.header-left p{font-size:12px;color:var(--muted);margin-top:2px;}
+.version-badge{font-size:10px;font-weight:600;background:var(--accent-light);color:var(--accent-text);padding:3px 10px;border-radius:20px;letter-spacing:0.4px;}
+.tabs{display:flex;gap:4px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:4px;margin-bottom:20px;width:fit-content;}
+.tab{padding:7px 16px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.15s;}
+.tab.active{background:var(--accent);color:#fff;}
+.tab:hover:not(.active){background:var(--gray-light);color:var(--text);}
+
+/* ── DASHBOARD ── */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;}
+.kpi{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:14px 16px;}
+.kpi-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:6px;}
+.kpi-value{font-size:26px;font-weight:600;letter-spacing:-0.5px;font-family:'DM Serif Display',serif;}
+.kpi-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.charts-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
+.chart-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:16px;}
+.chart-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;color:var(--muted);}
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.filter-select,.search-input{padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;}
+.search-input{width:190px;}
+.filter-select:focus,.search-input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent;}
+.export-btn{margin-left:auto;padding:6px 14px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-md);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;}
+.export-btn:hover{background:var(--gray-light);}
+.table-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);overflow-x:auto;}
+table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:900px;}
+th{text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:10px 10px;border-bottom:0.5px solid var(--border);background:var(--bg);}
+td{padding:9px 10px;border-bottom:0.5px solid var(--border);font-size:13px;vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--gray-light);}
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap;}
+.cat-people{background:var(--purple-light);color:var(--purple-text);}
+.cat-process{background:var(--blue-light);color:var(--blue-text);}
+.cat-product{background:var(--coral-light);color:var(--coral-text);}
+.cat-policy{background:var(--amber-light);color:var(--amber-text);}
+.status-active{background:var(--accent-light);color:var(--accent-text);}
+.status-pending{background:var(--amber-light);color:var(--amber-text);}
+.status-blocked{background:var(--red-light);color:var(--red-text);}
+.status-completed{background:var(--gray-light);color:var(--gray-text);}
+.effort-project{background:var(--red-light);color:var(--red-text);}
+.effort-complex{background:var(--amber-light);color:var(--amber-text);}
+.effort-ci{background:var(--blue-light);color:var(--blue-text);}
+.effort-quickwin{background:var(--green-light);color:var(--green-text);}
+.impact-high{color:var(--accent);font-weight:600;}
+.impact-med{color:var(--amber);font-weight:600;}
+.impact-low{color:var(--muted);}
+.need-badge{background:var(--red-light);color:var(--red-text);font-size:10px;padding:1px 6px;border-radius:20px;font-weight:500;}
+.no-need{color:var(--hint);font-size:11px;}
+.expand-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;padding:0 4px;line-height:1;}
+.expand-row td{padding:14px 16px;background:var(--bg);}
+.expand-content{font-size:13px;color:var(--muted);line-height:1.6;}
+.expand-content strong{color:var(--text);font-weight:600;}
+.quant-highlight{background:var(--accent-light);color:var(--accent-text);padding:4px 10px;border-radius:var(--r);font-size:12px;font-weight:500;display:inline-block;margin-top:4px;}
+.quant-missing{background:var(--red-light);color:var(--red-text);padding:4px 10px;border-radius:var(--r);font-size:12px;display:inline-block;margin-top:4px;}
+.jira-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
+.jira-input{padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;width:160px;}
+.jira-input:focus{outline:2px solid var(--accent);outline-offset:1px;}
+.jira-save-btn{padding:5px 12px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-md);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;}
+.jira-save-btn:hover{background:var(--gray-light);}
+.jira-link{font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;}
+.jira-link:hover{text-decoration:underline;}
+.jira-label{font-size:12px;color:var(--muted);}
+.expand-actions{display:flex;gap:8px;margin-top:12px;align-items:center;}
+.delete-btn{background:none;border:none;color:var(--hint);cursor:pointer;font-size:12px;padding:3px 8px;border-radius:var(--r);font-family:'DM Sans',sans-serif;}
+.delete-btn:hover{color:var(--red);background:var(--red-light);}
+.empty-state{padding:40px;text-align:center;color:var(--muted);font-size:13px;}
+
+/* ── FORM ── */
+.form-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:24px;max-width:680px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+label{font-size:12px;font-weight:600;color:var(--muted);}
+.req{color:var(--coral);}
+input[type="text"],input[type="date"],select,textarea{width:100%;padding:8px 10px;border:0.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent;}
+textarea{resize:vertical;min-height:70px;line-height:1.5;}
+.form-hint{font-size:11px;color:var(--hint);}
+.quant-hint{font-size:11px;color:var(--accent-text);background:var(--accent-light);padding:7px 10px;border-radius:var(--r);margin-top:2px;line-height:1.5;}
+.effort-desc{font-size:11px;color:var(--hint);margin-top:2px;}
+.btn{padding:9px 18px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s;font-family:'DM Sans',sans-serif;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{opacity:0.9;}
+.btn-ghost{background:transparent;color:var(--muted);border:0.5px solid var(--border-md);}
+.btn-ghost:hover{background:var(--gray-light);}
+.form-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
+.success-banner{background:var(--accent-light);border:0.5px solid var(--accent);color:var(--accent-text);border-radius:var(--r);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none;}
+.form-divider{border:none;border-top:0.5px solid var(--border);margin:4px 0;}
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:10px;}
+
+/* ── GUIDE ── */
+.guide{max-width:740px;}
+.guide-masthead{border-bottom:2px solid var(--text);padding-bottom:14px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:flex-end;}
+.guide-masthead h2{font-family:'DM Serif Display',serif;font-size:24px;letter-spacing:-0.3px;}
+.guide-masthead p{font-size:12px;color:var(--muted);margin-top:3px;font-style:italic;}
+.guide-tag{display:inline-block;background:var(--accent);color:#fff;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:2px;}
+.guide-intro{background:var(--text);color:var(--bg);padding:14px 18px;border-radius:4px;margin-bottom:20px;font-size:13px;line-height:1.6;}
+.guide-intro strong{color:#5DCAA5;}
+.guide-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.guide-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:14px 16px;}
+.guide-card h3{font-family:'DM Serif Display',serif;font-size:15px;margin-bottom:10px;}
+.cat-row{display:flex;flex-direction:column;gap:7px;}
+.cat-item{display:flex;gap:10px;align-items:flex-start;}
+.cat-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.cat-text strong{font-size:12px;font-weight:600;display:block;line-height:1.2;}
+.cat-text span{font-size:11px;color:var(--muted);}
+.effort-list{display:flex;flex-direction:column;gap:6px;}
+.effort-row{display:flex;align-items:baseline;gap:8px;}
+.effort-badge-sm{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.effort-def{font-size:11px;color:var(--muted);}
+.quant-callout{background:var(--accent-light);border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:14px;}
+.quant-callout strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:0.7px;color:var(--accent-text);margin-bottom:3px;font-weight:700;}
+.quant-callout p{font-size:12px;color:var(--accent-text);line-height:1.55;}
+.fields-table{width:100%;border-collapse:collapse;}
+.fields-table td{padding:5px 8px;font-size:12px;border-bottom:0.5px solid var(--border);vertical-align:top;}
+.fields-table tr:last-child td{border-bottom:none;}
+.fields-table td:first-child{font-weight:600;width:40%;white-space:nowrap;}
+.fields-table td:last-child{color:var(--muted);}
+.req-star{color:var(--coral);font-size:10px;vertical-align:super;}
+.steps{display:flex;flex-direction:column;}
+.step{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{width:22px;height:22px;background:var(--text);color:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;margin-top:1px;}
+.step-text strong{font-size:12px;font-weight:600;display:block;}
+.step-text span{font-size:11px;color:var(--muted);}
+.status-grid{display:flex;flex-direction:column;gap:6px;}
+.status-item{display:flex;gap:10px;align-items:flex-start;}
+.norms-list{display:flex;flex-direction:column;gap:6px;}
+.norm{display:flex;gap:8px;font-size:12px;align-items:flex-start;color:var(--muted);}
+.norm-icon{color:var(--accent);font-weight:700;flex-shrink:0;}
+.guide-footer{margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;}
+.guide-footer span{font-size:11px;color:var(--hint);}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-left">
+      <h1>QI Initiative Tracker</h1>
+      <p>Quality Intelligence insights → business action · Samsara Support Quality</p>
+    </div>
+    <span class="version-badge">Live · v1.0</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('dashboard',this)">Dashboard</button>
+    <button class="tab" onclick="showTab('intake',this)">Submit initiative</button>
+    <button class="tab" onclick="showTab('guide',this)">Team guide</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="tab-dashboard">
+    <div class="kpi-row" id="kpi-row"></div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">By category</div>
+        <div style="position:relative;height:155px;"><canvas id="catChart" role="img" aria-label="Initiatives by category">Category breakdown.</canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">By status</div>
+        <div style="position:relative;height:155px;"><canvas id="statusChart" role="img" aria-label="Initiatives by status">Status distribution.</canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">By effort tier</div>
+        <div style="position:relative;height:155px;"><canvas id="effortChart" role="img" aria-label="Initiatives by effort tier">Effort distribution.</canvas></div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search..." oninput="renderTable()">
+      <select class="filter-select" id="filterCat" onchange="renderTable()">
+        <option value="">All categories</option>
+        <option>People</option><option>Process</option><option>Product</option><option>Policy</option>
+      </select>
+      <select class="filter-select" id="filterStatus" onchange="renderTable()">
+        <option value="">All statuses</option>
+        <option>Active</option><option>Pending</option><option>Blocked</option><option>Completed</option>
+      </select>
+      <select class="filter-select" id="filterEffort" onchange="renderTable()">
+        <option value="">All effort tiers</option>
+        <option value="Project">Project</option>
+        <option value="Complex task">Complex task</option>
+        <option value="Continuous improvement">Continuous improvement</option>
+        <option value="Quick win">Quick win</option>
+      </select>
+      <select class="filter-select" id="filterNeed" onchange="renderTable()">
+        <option value="">All</option>
+        <option value="yes">Help needed</option>
+        <option value="no">No help needed</option>
+      </select>
+      <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:20%">Initiative</th>
+            <th style="width:9%">Category</th>
+            <th style="width:9%">Effort</th>
+            <th style="width:11%">KPI impacted</th>
+            <th style="width:9%">Status</th>
+            <th style="width:8%">Impact</th>
+            <th style="width:11%">Help needed</th>
+            <th style="width:8%">Jira</th>
+            <th style="width:8%">Owner</th>
+            <th style="width:7%">Submitted</th>
+            <th style="width:3%"></th>
+          </tr>
+        </thead>
+        <tbody id="initiative-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- INTAKE -->
+  <div id="tab-intake" style="display:none">
+    <div class="success-banner" id="successBanner">Initiative submitted — it now appears in the dashboard.</div>
+    <div class="form-card">
+      <div class="section-label">New QI initiative</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Initiative title <span class="req">*</span></label>
+          <input type="text" id="f-title" placeholder="e.g. Reduce L1 TS misrouting rate via SOP fix">
+        </div>
+        <div class="form-group full">
+          <label>Insight summary <span class="req">*</span></label>
+          <textarea id="f-insight" placeholder="What QI data or finding is driving this? Include rates, volumes, or patterns observed."></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Quantified opportunity <span class="req">*</span></label>
+          <textarea id="f-quant" style="min-height:54px" placeholder="e.g. ~120 tickets/week affected · est. 8pt CSAT delta · $30k AHT savings"></textarea>
+          <div class="quant-hint">Numbers make this land with Directors+. Include ticket volume, rate delta, or projected score change. Required — don't leave this blank.</div>
+        </div>
+        <hr class="form-divider" style="grid-column:1/-1">
+        <div class="form-group">
+          <label>Category <span class="req">*</span></label>
+          <select id="f-cat">
+            <option value="">Select...</option>
+            <option>People</option><option>Process</option><option>Product</option><option>Policy</option>
+          </select>
+          <span class="form-hint">People = agent behavior · Process = workflow · Product = tooling · Policy = rules</span>
+        </div>
+        <div class="form-group">
+          <label>Effort tier <span class="req">*</span></label>
+          <select id="f-effort" onchange="updateEffortHint()">
+            <option value="">Select...</option>
+            <option value="Project">Project</option>
+            <option value="Complex task">Complex task</option>
+            <option value="Continuous improvement">Continuous improvement</option>
+            <option value="Quick win">Quick win</option>
+          </select>
+          <span class="effort-desc" id="effort-hint">Select a tier to see definition.</span>
+        </div>
+        <div class="form-group">
+          <label>Primary KPI impacted <span class="req">*</span></label>
+          <select id="f-kpi">
+            <option value="">Select...</option>
+            <option>CSAT</option><option>FCR (First Contact Resolution)</option>
+            <option>AHT (Avg Handle Time)</option><option>DSAT</option>
+            <option>QA Score</option><option>Escalation Rate</option>
+            <option>Reopen Rate</option><option>SLA Compliance</option>
+            <option>Coaching Efficiency</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Estimated impact</label>
+          <select id="f-impact">
+            <option value="">Select...</option>
+            <option>High</option><option>Medium</option><option>Low</option>
+          </select>
+          <span class="form-hint">High = measurable KPI shift · Med = quality improvement · Low = risk reduction</span>
+        </div>
+        <div class="form-group">
+          <label>Current status</label>
+          <select id="f-status">
+            <option>Pending</option><option>Active</option><option>Blocked</option><option>Completed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target resolution date</label>
+          <input type="date" id="f-date">
+        </div>
+        <hr class="form-divider" style="grid-column:1/-1">
+        <div class="form-group full">
+          <label>Recommended action / ask</label>
+          <textarea id="f-action" style="min-height:54px" placeholder="What needs to happen? Who needs to act? What's the specific ask?"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Help needed?</label>
+          <select id="f-help">
+            <option value="no">No — QI is driving this</option>
+            <option value="yes">Yes — escalation or cross-functional support needed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Help from whom</label>
+          <input type="text" id="f-help-detail" placeholder="e.g. BizTech, Training, Delivery Ops">
+        </div>
+        <div class="form-group">
+          <label>Submitted by <span class="req">*</span></label>
+          <input type="text" id="f-owner" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Jira ticket (if exists)</label>
+          <input type="text" id="f-jira" placeholder="e.g. SUPOPS-6649">
+          <span class="form-hint">Optional — link an existing ticket or add later from the dashboard</span>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="resetForm()">Clear</button>
+        <button class="btn btn-primary" onclick="submitInitiative()">Submit initiative</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GUIDE -->
+  <div id="tab-guide" style="display:none">
+    <div class="guide">
+      <div class="guide-masthead">
+        <div>
+          <h2>QI Initiative Tracker</h2>
+          <p>How to submit, track, and close the loop on Quality Intelligence findings</p>
+        </div>
+        <div style="text-align:right">
+          <span class="guide-tag">QI Team</span>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px;">Samsara Support Quality</div>
+        </div>
+      </div>
+
+      <div class="guide-intro">
+        <strong>What this is:</strong> A shared dashboard where QA team members log findings from audits, DSAT reviews, and AutoQA data — and track whether the business acted on them. Every initiative ties a QI insight to a KPI, a recommended action, and a quantified business opportunity. The goal is to stop insights from going dark after delivery.
+      </div>
+
+      <div class="guide-grid-2">
+        <div>
+          <div class="section-label">The four categories</div>
+          <div class="guide-card">
+            <div class="cat-row">
+              <div class="cat-item"><div class="cat-dot" style="background:#534AB7"></div><div class="cat-text"><strong>People</strong><span>Agent behavior, coaching gaps, performance patterns</span></div></div>
+              <div class="cat-item"><div class="cat-dot" style="background:#185FA5"></div><div class="cat-text"><strong>Process</strong><span>Workflow breakdowns, routing issues, SOP gaps</span></div></div>
+              <div class="cat-item"><div class="cat-dot" style="background:#D85A30"></div><div class="cat-text"><strong>Product</strong><span>Tooling issues, macro problems, system defects</span></div></div>
+              <div class="cat-item"><div class="cat-dot" style="background:#BA7517"></div><div class="cat-text"><strong>Policy</strong><span>Rule gaps, inconsistent guidance, compliance risk</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">Effort tiers</div>
+          <div class="guide-card">
+            <div class="effort-list">
+              <div class="effort-row"><span class="effort-badge-sm" style="background:#FCEBEB;color:#A32D2D;">Project</span><span class="effort-def">2+ weeks or 10+ hours — full scoped work</span></div>
+              <div class="effort-row"><span class="effort-badge-sm" style="background:#FAEEDA;color:#633806;">Complex task</span><span class="effort-def">1–2 weeks or 5–10 hours — multi-step</span></div>
+              <div class="effort-row"><span class="effort-badge-sm" style="background:#E6F1FB;color:#0C447C;">Continuous improvement</span><span class="effort-def">≤1 week or ≤5 hours — contained fix</span></div>
+              <div class="effort-row"><span class="effort-badge-sm" style="background:#EAF3DE;color:#27500A;">Quick win</span><span class="effort-def">&lt;1 day or &lt;2 hours — fast action</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="quant-callout">
+        <strong>The quantified opportunity field is non-negotiable</strong>
+        <p>This is what makes a finding actionable for Directors+. Don't submit without it. Include at least one of: ticket volume affected, rate delta, projected score change, or estimated cost impact. Example: <em>"~85 tickets/week misrouted · est. 12pt escalation rate reduction · $18k AHT savings"</em></p>
+      </div>
+
+      <div class="guide-grid-2">
+        <div>
+          <div class="section-label">All form fields</div>
+          <div class="guide-card">
+            <table class="fields-table">
+              <tr><td>Initiative title<span class="req-star">*</span></td><td>Short, specific, action-oriented</td></tr>
+              <tr><td>Insight summary<span class="req-star">*</span></td><td>The QI data driving this — rates, volumes, patterns</td></tr>
+              <tr><td>Quantified opportunity<span class="req-star">*</span></td><td>Numbers only. See callout above.</td></tr>
+              <tr><td>Category<span class="req-star">*</span></td><td>People / Process / Product / Policy</td></tr>
+              <tr><td>Effort tier<span class="req-star">*</span></td><td>See tiers above</td></tr>
+              <tr><td>KPI impacted<span class="req-star">*</span></td><td>Primary metric this moves</td></tr>
+              <tr><td>Estimated impact</td><td>High / Medium / Low</td></tr>
+              <tr><td>Status</td><td>Pending / Active / Blocked / Completed</td></tr>
+              <tr><td>Recommended action</td><td>Specific ask — who, what, by when</td></tr>
+              <tr><td>Help needed</td><td>Flag if cross-functional support required</td></tr>
+              <tr><td>Help from whom</td><td>e.g. BizTech, Training, Delivery Ops</td></tr>
+              <tr><td>Submitted by<span class="req-star">*</span></td><td>Your name</td></tr>
+              <tr><td>Target resolution date</td><td>When this should be closed</td></tr>
+              <tr><td>Jira ticket</td><td>Link existing ticket or add after submission</td></tr>
+            </table>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <div class="section-label">How to submit</div>
+            <div class="guide-card">
+              <div class="steps">
+                <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Open the Submit initiative tab</strong><span>At the top of this tracker</span></div></div>
+                <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Fill in all required fields</strong><span>Marked with <span style="color:#D85A30">*</span> — form blocks submission if any are missing</span></div></div>
+                <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Quantify the opportunity</strong><span>Required. Add data before submitting — don't leave it vague</span></div></div>
+                <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Submit</strong><span>Appears in the dashboard immediately, visible to all stakeholders</span></div></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="section-label">Status definitions</div>
+            <div class="guide-card">
+              <div class="status-grid">
+                <div class="cat-item"><div class="cat-dot" style="background:#1D9E75"></div><div class="cat-text"><strong>Active</strong><span>In progress — someone is working it</span></div></div>
+                <div class="cat-item"><div class="cat-dot" style="background:#BA7517"></div><div class="cat-text"><strong>Pending</strong><span>Submitted, not yet actioned</span></div></div>
+                <div class="cat-item"><div class="cat-dot" style="background:#A32D2D"></div><div class="cat-text"><strong>Blocked</strong><span>Needs external support to move forward</span></div></div>
+                <div class="cat-item"><div class="cat-dot" style="background:#888780"></div><div class="cat-text"><strong>Completed</strong><span>Action taken and closed out</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">Team norms</div>
+        <div class="guide-card">
+          <div class="norms-list">
+            <div class="norm"><span class="norm-icon">→</span><span>Submit within the same week you identify the finding — don't batch</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>If you're blocked on quantifying, ask Frida before leaving the field blank</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>Update the status yourself when it changes — don't wait for someone to ask</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>If help is needed from another team, flag it in the tracker — don't just mention it in Slack</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>The dashboard is visible to Directors+ — write the insight and recommended action as if they're reading it directly</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>When a Jira ticket exists, link it in the dashboard row — keeps the paper trail intact</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-footer">
+        <span>QI Initiative Tracker · Quality Intelligence · Samsara Support</span>
+        <span>Questions → Frida Dolan</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY='qi_initiatives_v3';
+let initiatives=[];
+let expandedId=null;
+let catChart,statusChart,effortChart;
+
+const EFFORT_DEFS={
+  'Project':'2+ weeks or 10+ hours — full scoped project',
+  'Complex task':'1–2 weeks or 5–10 hours — multi-step, cross-functional',
+  'Continuous improvement':'≤1 week or ≤5 hours — contained, team-level fix',
+  'Quick win':'<1 day or <2 hours — fast, low-friction action'
+};
+
+const JIRA_BASE='https://samsara.atlassian-us-gov-mod.net/browse/';
+
+const SEED=[
+  {id:1,title:'Reduce L1 TS misrouting via SOP update',insight:'QA audit data shows 18% of L1 TS tickets are misrouted to L2 due to ambiguous escalation criteria. Pattern concentrated in hardware troubleshooting queue.',quantified:'~85 tickets/week misrouted · est. 12pt escalation rate reduction',category:'Process',effort:'Complex task',kpi:'Escalation Rate',status:'Active',impact:'High',helpNeeded:'yes',helpDetail:'Training',owner:'Sergio E.',submitted:'2026-05-14',targetDate:'2026-06-30',action:'Rewrite escalation decision tree with Training; push to L1 TS coaches by June.',jira:''},
+  {id:2,title:'Coaching cadence gap — L1 CS bottom quartile agents',insight:'DSAT Review cycle identified 14 agents with >3 consecutive failing QA scores with no documented coaching touchpoint in the last 30 days.',quantified:'14 agents · est. 6pt avg QA score lift if coaching actioned within 5 days',category:'People',effort:'Project',kpi:'QA Score',status:'Pending',impact:'High',helpNeeded:'yes',helpDetail:'Delivery Ops, L1 CS Managers',owner:'Isabel J.',submitted:'2026-05-20',targetDate:'2026-06-15',action:'Define closed-loop SLA between QA finding and TL coaching acknowledgment.',jira:''},
+  {id:3,title:'DSAT root cause — billing confusion post-pricing change',insight:'DSAT classification over 3 weeks shows 31% of L1 CS DSATs cite billing confusion tied to the March pricing update.',quantified:'~62 DSATs/week attributable · 31% of total L1 CS DSAT volume',category:'Policy',effort:'Quick win',kpi:'DSAT',status:'Active',impact:'High',helpNeeded:'no',helpDetail:'',owner:'Emily G.',submitted:'2026-05-22',targetDate:'2026-07-01',action:'Push findings to Policy team for clarification memo; QI to track DSAT rate post-update.',jira:''},
+  {id:4,title:'Rippit rubric calibration — L2 TS scoring drift',insight:'Inter-rater reliability on L2 TS AutoQA scores dropped from 91% to 78% over 6 weeks.',quantified:'IRR back to 89% post-calibration · 13pt scoring drift corrected',category:'People',effort:'Continuous improvement',kpi:'QA Score',status:'Completed',impact:'Medium',helpNeeded:'no',helpDetail:'',owner:'Cecilia L.',submitted:'2026-04-10',targetDate:'2026-05-01',action:'Monthly calibration sessions reinstated. Rubric anchors updated.',jira:''},
+  {id:5,title:'Zendesk macro library — deprecated macros driving policy violations',insight:'Policy/Product audit surfaced 23 active macros referencing deprecated workflows or incorrect refund language.',quantified:'23 macros · 400+ uses/week · est. 5pt CSAT risk if unresolved',category:'Product',effort:'Complex task',kpi:'CSAT',status:'Blocked',impact:'Medium',helpNeeded:'yes',helpDetail:'BizTech',owner:'Sergio E.',submitted:'2026-05-05',targetDate:'2026-06-20',action:'BizTech access needed to deprecate/update macros. QI has the full audit list ready.',jira:''},
+];
+
+async function loadData(){
+  try{
+    const res=await window.storage.get(STORAGE_KEY);
+    if(res&&res.value){initiatives=JSON.parse(res.value);}
+    else{initiatives=SEED;await saveData();}
+  }catch{initiatives=SEED;}
+  render();
+}
+
+async function saveData(){
+  try{await window.storage.set(STORAGE_KEY,JSON.stringify(initiatives));}catch{}
+}
+
+function showTab(tab,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  ['dashboard','intake','guide'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===tab?'':'none';
+  });
+  if(tab==='dashboard')render();
+}
+
+function updateEffortHint(){
+  const v=document.getElementById('f-effort').value;
+  document.getElementById('effort-hint').textContent=EFFORT_DEFS[v]||'Select a tier to see definition.';
+}
+
+function catClass(c){return 'cat-'+(c||'').toLowerCase();}
+function statusClass(s){return 'status-'+(s||'').toLowerCase();}
+function effortClass(e){
+  const m={'Project':'effort-project','Complex task':'effort-complex','Continuous improvement':'effort-ci','Quick win':'effort-quickwin'};
+  return m[e]||'effort-ci';
+}
+function impactClass(i){return i==='High'?'impact-high':i==='Medium'?'impact-med':'impact-low';}
+
+function getFiltered(){
+  const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
+  const cat=document.getElementById('filterCat')?.value||'';
+  const status=document.getElementById('filterStatus')?.value||'';
+  const effort=document.getElementById('filterEffort')?.value||'';
+  const need=document.getElementById('filterNeed')?.value||'';
+  return initiatives.filter(i=>{
+    if(q&&!i.title.toLowerCase().includes(q)&&!(i.insight||'').toLowerCase().includes(q))return false;
+    if(cat&&i.category!==cat)return false;
+    if(status&&i.status!==status)return false;
+    if(effort&&i.effort!==effort)return false;
+    if(need==='yes'&&i.helpNeeded!=='yes')return false;
+    if(need==='no'&&i.helpNeeded!=='no')return false;
+    return true;
+  });
+}
+
+function renderKPIs(){
+  const t=initiatives.length;
+  const active=initiatives.filter(i=>i.status==='Active').length;
+  const blocked=initiatives.filter(i=>i.status==='Blocked').length;
+  const help=initiatives.filter(i=>i.helpNeeded==='yes').length;
+  const projects=initiatives.filter(i=>i.effort==='Project').length;
+  const completed=initiatives.filter(i=>i.status==='Completed').length;
+  document.getElementById('kpi-row').innerHTML=`
+    <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-value">${t}</div><div class="kpi-sub">All initiatives</div></div>
+    <div class="kpi"><div class="kpi-label">Active</div><div class="kpi-value" style="color:var(--accent)">${active}</div><div class="kpi-sub">In progress</div></div>
+    <div class="kpi"><div class="kpi-label">Blocked</div><div class="kpi-value" style="color:var(--red)">${blocked}</div><div class="kpi-sub">Need unblocking</div></div>
+    <div class="kpi"><div class="kpi-label">Help needed</div><div class="kpi-value" style="color:var(--amber)">${help}</div><div class="kpi-sub">Cross-functional ask</div></div>
+    <div class="kpi"><div class="kpi-label">Projects</div><div class="kpi-value" style="color:var(--purple)">${projects}</div><div class="kpi-sub">Full-scope</div></div>
+    <div class="kpi"><div class="kpi-label">Completed</div><div class="kpi-value" style="color:var(--muted)">${completed}</div><div class="kpi-sub">Closed out</div></div>
+  `;
+}
+
+function renderCharts(){
+  if(catChart)catChart.destroy();
+  if(statusChart)statusChart.destroy();
+  if(effortChart)effortChart.destroy();
+  const isDark=matchMedia('(prefers-color-scheme:dark)').matches;
+  const tick=isDark?'#a0a09a':'#6b6860';
+  const grid=isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.07)';
+  const cats=['People','Process','Product','Policy'];
+  catChart=new Chart(document.getElementById('catChart'),{
+    type:'bar',
+    data:{labels:cats,datasets:[{data:cats.map(c=>initiatives.filter(i=>i.category===c).length),backgroundColor:['#534AB7','#185FA5','#D85A30','#BA7517'],borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tick,font:{size:11}},grid:{display:false}},y:{ticks:{color:tick,font:{size:11},stepSize:1},grid:{color:grid},beginAtZero:true}}}
+  });
+  const statuses=['Active','Pending','Blocked','Completed'];
+  statusChart=new Chart(document.getElementById('statusChart'),{
+    type:'doughnut',
+    data:{labels:statuses,datasets:[{data:statuses.map(s=>initiatives.filter(i=>i.status===s).length),backgroundColor:['#1D9E75','#BA7517','#A32D2D','#888780'],borderWidth:0,hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{color:tick,font:{size:10},boxWidth:9,padding:8}}}}
+  });
+  const effortTiers=['Quick win','Continuous improvement','Complex task','Project'];
+  effortChart=new Chart(document.getElementById('effortChart'),{
+    type:'doughnut',
+    data:{labels:effortTiers,datasets:[{data:effortTiers.map(e=>initiatives.filter(i=>i.effort===e).length),backgroundColor:['#3B6D11','#185FA5','#BA7517','#A32D2D'],borderWidth:0,hoverOffset:4}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{color:tick,font:{size:10},boxWidth:9,padding:8}}}}
+  });
+}
+
+function renderTable(){
+  const filtered=getFiltered();
+  const tbody=document.getElementById('initiative-tbody');
+  if(!filtered.length){tbody.innerHTML='<tr><td colspan="11"><div class="empty-state">No initiatives match the current filters.</div></td></tr>';return;}
+  tbody.innerHTML=filtered.map(i=>{
+    const exp=expandedId===i.id;
+    const jiraCell=i.jira
+      ?`<a class="jira-link" href="${JIRA_BASE}${i.jira}" target="_blank">${i.jira}</a>`
+      :`<span class="no-need">—</span>`;
+    return`<tr>
+      <td style="font-weight:500;line-height:1.3">${i.title}</td>
+      <td><span class="badge ${catClass(i.category)}">${i.category}</span></td>
+      <td><span class="badge ${effortClass(i.effort)}">${i.effort||'—'}</span></td>
+      <td style="font-size:12px;color:var(--muted)">${i.kpi||'—'}</td>
+      <td><span class="badge ${statusClass(i.status)}">${i.status}</span></td>
+      <td><span class="${impactClass(i.impact)}">${i.impact||'—'}</span></td>
+      <td>${i.helpNeeded==='yes'?`<span class="need-badge">${i.helpDetail||'Yes'}</span>`:'<span class="no-need">—</span>'}</td>
+      <td>${jiraCell}</td>
+      <td style="font-size:12px">${i.owner}</td>
+      <td style="font-size:11px;color:var(--hint)">${i.submitted}</td>
+      <td><button class="expand-btn" onclick="toggleExpand(${i.id})">${exp?'▲':'▼'}</button></td>
+    </tr>
+    ${exp?`<tr class="expand-row"><td colspan="11"><div class="expand-content">
+      ${i.insight?`<p><strong>Insight:</strong> ${i.insight}</p>`:''}
+      ${i.quantified
+        ?`<p style="margin-top:6px"><strong>Quantified opportunity:</strong> <span class="quant-highlight">${i.quantified}</span></p>`
+        :`<p style="margin-top:6px"><span class="quant-missing">Quantified opportunity not filled in — update this to make the finding actionable.</span></p>`}
+      ${i.action?`<p style="margin-top:6px"><strong>Recommended action:</strong> ${i.action}</p>`:''}
+      ${i.targetDate?`<p style="margin-top:6px"><strong>Target date:</strong> ${i.targetDate}</p>`:''}
+      ${i.effort?`<p style="margin-top:6px"><strong>Effort tier:</strong> ${i.effort} — ${EFFORT_DEFS[i.effort]||''}</p>`:''}
+      <div class="jira-row">
+        <span class="jira-label">Jira ticket:</span>
+        ${i.jira
+          ?`<a class="jira-link" href="${JIRA_BASE}${i.jira}" target="_blank">${i.jira}</a>
+             <input class="jira-input" id="jira-edit-${i.id}" type="text" value="${i.jira}" placeholder="SUPOPS-XXXX" style="width:130px">
+             <button class="jira-save-btn" onclick="saveJira(${i.id})">Update</button>`
+          :`<input class="jira-input" id="jira-edit-${i.id}" type="text" placeholder="SUPOPS-XXXX">
+            <button class="jira-save-btn" onclick="saveJira(${i.id})">Link ticket</button>`}
+      </div>
+      <div class="expand-actions">
+        <button class="delete-btn" onclick="deleteInitiative(${i.id})">✕ Remove</button>
+      </div>
+    </div></td></tr>`:''}`;
+  }).join('');
+}
+
+function toggleExpand(id){expandedId=expandedId===id?null:id;renderTable();}
+
+async function saveJira(id){
+  const val=document.getElementById('jira-edit-'+id)?.value.trim().toUpperCase();
+  const idx=initiatives.findIndex(i=>i.id===id);
+  if(idx===-1)return;
+  initiatives[idx].jira=val;
+  await saveData();
+  renderTable();
+  renderKPIs();
+}
+
+async function deleteInitiative(id){
+  if(!confirm('Remove this initiative?'))return;
+  initiatives=initiatives.filter(i=>i.id!==id);
+  await saveData();render();
+}
+
+function render(){renderKPIs();renderCharts();renderTable();}
+
+function exportCSV(){
+  const headers=['ID','Title','Category','Effort Tier','KPI Impacted','Status','Impact','Quantified Opportunity','Insight','Recommended Action','Help Needed','Help From','Owner','Submitted','Target Date','Jira Ticket'];
+  const rows=initiatives.map(i=>[
+    i.id,`"${(i.title||'').replace(/"/g,'""')}"`,i.category,`"${i.effort||''}"`,
+    i.kpi,i.status,i.impact,`"${(i.quantified||'').replace(/"/g,'""')}"`,
+    `"${(i.insight||'').replace(/"/g,'""')}"`,`"${(i.action||'').replace(/"/g,'""')}"`,
+    i.helpNeeded==='yes'?'Yes':'No',`"${(i.helpDetail||'').replace(/"/g,'""')}"`,
+    i.owner,i.submitted,i.targetDate||'',i.jira||''
+  ]);
+  const csv=[headers.join(','),...rows.map(r=>r.join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`qi-initiatives-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+function resetForm(){
+  ['f-title','f-insight','f-quant','f-cat','f-effort','f-kpi','f-impact','f-status','f-help','f-help-detail','f-owner','f-date','f-action','f-jira'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.value=el.tagName==='SELECT'?el.options[0].value:'';
+  });
+  document.getElementById('effort-hint').textContent='Select a tier to see definition.';
+}
+
+async function submitInitiative(){
+  const title=document.getElementById('f-title').value.trim();
+  const insight=document.getElementById('f-insight').value.trim();
+  const quant=document.getElementById('f-quant').value.trim();
+  const cat=document.getElementById('f-cat').value;
+  const effort=document.getElementById('f-effort').value;
+  const owner=document.getElementById('f-owner').value.trim();
+  if(!title||!insight||!cat||!effort||!owner){alert('Fill in all required fields (marked *).');return;}
+  if(!quant){alert('Quantified opportunity is required. Add ticket volume, rate delta, or projected score change — this is what makes the finding actionable for Directors+.');return;}
+  const newItem={
+    id:Date.now(),title,insight,quantified:quant,category:cat,effort,
+    kpi:document.getElementById('f-kpi').value,
+    impact:document.getElementById('f-impact').value||'Medium',
+    status:document.getElementById('f-status').value||'Pending',
+    helpNeeded:document.getElementById('f-help').value,
+    helpDetail:document.getElementById('f-help-detail').value.trim(),
+    owner,submitted:new Date().toISOString().split('T')[0],
+    targetDate:document.getElementById('f-date').value,
+    action:document.getElementById('f-action').value.trim(),
+    jira:document.getElementById('f-jira').value.trim().toUpperCase(),
+  };
+  initiatives.push(newItem);
+  await saveData();
+  resetForm();
+  const b=document.getElementById('successBanner');
+  b.style.display='block';setTimeout(()=>b.style.display='none',4000);
+}
+
+loadData();
+</script>
+</body>
+</html>
