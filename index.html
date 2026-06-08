@@ -55,6 +55,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .charts-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
 .chart-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:16px;}
 .chart-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;color:var(--muted);}
+.filter-bar{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:12px 14px;margin-bottom:16px;}
+.filter-bar-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.date-range{display:flex;align-items:center;gap:6px;}
+.date-input{width:130px;}
+.date-sep{font-size:12px;color:var(--muted);}
+.clear-filters-btn{padding:6px 12px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-md);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;}
+.clear-filters-btn:hover{background:var(--red-light);color:var(--red);border-color:var(--red);}
 .toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
 .filter-select,.search-input{padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;}
 .search-input{width:190px;}
@@ -169,6 +176,18 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .norm-icon{color:var(--accent);font-weight:700;flex-shrink:0;}
 .guide-footer{margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;}
 .guide-footer span{font-size:11px;color:var(--hint);}
+
+/* ── EDIT MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;}
+.modal{background:var(--surface);border:0.5px solid var(--border-md);border-radius:var(--rl);width:100%;max-width:660px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:0.5px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;}
+.modal-header h3{font-family:'DM Serif Display',serif;font-size:17px;}
+.modal-close{background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1;}
+.modal-close:hover{background:var(--gray-light);color:var(--text);}
+.modal-body{padding:20px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;padding:14px 20px;border-top:0.5px solid var(--border);position:sticky;bottom:0;background:var(--surface);}
+.edit-btn{background:none;border:0.5px solid var(--border-md);color:var(--text);font-size:12px;font-weight:500;padding:4px 12px;border-radius:var(--r);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.edit-btn:hover{background:var(--gray-light);}
 </style>
 </head>
 <body>
@@ -189,6 +208,41 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 
   <!-- DASHBOARD -->
   <div id="tab-dashboard">
+    <div class="filter-bar">
+      <div class="filter-bar-row">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search initiatives..." oninput="renderTable()">
+        <select class="filter-select" id="filterCat" onchange="renderTable()">
+          <option value="">All categories</option>
+          <option>People</option><option>Process</option><option>Product</option><option>Policy</option>
+        </select>
+        <select class="filter-select" id="filterStatus" onchange="renderTable()">
+          <option value="">All statuses</option>
+          <option>Active</option><option>Pending</option><option>Blocked</option><option>Completed</option>
+        </select>
+        <select class="filter-select" id="filterEffort" onchange="renderTable()">
+          <option value="">All effort tiers</option>
+          <option value="Project">Project</option>
+          <option value="Complex task">Complex task</option>
+          <option value="Continuous improvement">Continuous improvement</option>
+          <option value="Quick win">Quick win</option>
+        </select>
+        <select class="filter-select" id="filterNeed" onchange="renderTable()">
+          <option value="">All</option>
+          <option value="yes">Help needed</option>
+          <option value="no">No help needed</option>
+        </select>
+        <select class="filter-select" id="filterOwner" onchange="renderTable()">
+          <option value="">All owners</option>
+        </select>
+        <div class="date-range">
+          <input type="date" class="filter-select date-input" id="filterDateFrom" onchange="renderTable()" title="Submitted from">
+          <span class="date-sep">→</span>
+          <input type="date" class="filter-select date-input" id="filterDateTo" onchange="renderTable()" title="Submitted to">
+        </div>
+        <button class="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
+        <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
+      </div>
+    </div>
     <div class="kpi-row" id="kpi-row"></div>
     <div class="charts-row">
       <div class="chart-card">
@@ -203,30 +257,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
         <div class="chart-title">By effort tier</div>
         <div style="position:relative;height:155px;"><canvas id="effortChart" role="img" aria-label="Initiatives by effort tier">Effort distribution.</canvas></div>
       </div>
-    </div>
-    <div class="toolbar">
-      <input type="text" class="search-input" id="searchInput" placeholder="Search..." oninput="renderTable()">
-      <select class="filter-select" id="filterCat" onchange="renderTable()">
-        <option value="">All categories</option>
-        <option>People</option><option>Process</option><option>Product</option><option>Policy</option>
-      </select>
-      <select class="filter-select" id="filterStatus" onchange="renderTable()">
-        <option value="">All statuses</option>
-        <option>Active</option><option>Pending</option><option>Blocked</option><option>Completed</option>
-      </select>
-      <select class="filter-select" id="filterEffort" onchange="renderTable()">
-        <option value="">All effort tiers</option>
-        <option value="Project">Project</option>
-        <option value="Complex task">Complex task</option>
-        <option value="Continuous improvement">Continuous improvement</option>
-        <option value="Quick win">Quick win</option>
-      </select>
-      <select class="filter-select" id="filterNeed" onchange="renderTable()">
-        <option value="">All</option>
-        <option value="yes">Help needed</option>
-        <option value="no">No help needed</option>
-      </select>
-      <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
     </div>
     <div class="table-wrap">
       <table>
@@ -320,7 +350,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
         </div>
         <hr class="form-divider" style="grid-column:1/-1">
         <div class="form-group full">
-          <label>Recommended action / ask</label>
+          <label>Recommended action / ask <span class="req">*</span></label>
           <textarea id="f-action" style="min-height:54px" placeholder="What needs to happen? Who needs to act? What's the specific ask?"></textarea>
         </div>
         <div class="form-group">
@@ -336,7 +366,16 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
         </div>
         <div class="form-group">
           <label>Submitted by <span class="req">*</span></label>
-          <input type="text" id="f-owner" placeholder="Your name">
+          <select id="f-owner">
+            <option value="">Select your name...</option>
+            <option value="Cecilia Lugo · cecilia.lugo@samsara.com">Cecilia Lugo</option>
+            <option value="Emily Gonzalez · emily.gonzalez@samsara.com">Emily Gonzalez</option>
+            <option value="Frida Dolan · frida.dolan@samsara.com">Frida Dolan</option>
+            <option value="Isabel Jimenez · isabel.jimenez@samsara.com">Isabel Jimenez</option>
+            <option value="Michelle Todd · michelle.todd@samsara.com">Michelle Todd</option>
+            <option value="Sergio Echeverria · sergio.echeverria@samsara.com">Sergio Echeverria</option>
+            <option value="Shine Raj · shine.raj@samsara.com">Shine Raj</option>
+          </select>
         </div>
         <div class="form-group">
           <label>Jira ticket (if exists)</label>
@@ -399,49 +438,48 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
         <p>This is what makes a finding actionable for Directors+. Don't submit without it. Include at least one of: ticket volume affected, rate delta, projected score change, or estimated cost impact. Example: <em>"~85 tickets/week misrouted · est. 12pt escalation rate reduction · $18k AHT savings"</em></p>
       </div>
 
-      <div class="guide-grid-2">
-        <div>
-          <div class="section-label">All form fields</div>
-          <div class="guide-card">
-            <table class="fields-table">
-              <tr><td>Initiative title<span class="req-star">*</span></td><td>Short, specific, action-oriented</td></tr>
-              <tr><td>Insight summary<span class="req-star">*</span></td><td>The QI data driving this — rates, volumes, patterns</td></tr>
-              <tr><td>Quantified opportunity<span class="req-star">*</span></td><td>Numbers only. See callout above.</td></tr>
-              <tr><td>Category<span class="req-star">*</span></td><td>People / Process / Product / Policy</td></tr>
-              <tr><td>Effort tier<span class="req-star">*</span></td><td>See tiers above</td></tr>
-              <tr><td>KPI impacted<span class="req-star">*</span></td><td>Primary metric this moves</td></tr>
-              <tr><td>Estimated impact</td><td>High / Medium / Low</td></tr>
-              <tr><td>Status</td><td>Pending / Active / Blocked / Completed</td></tr>
-              <tr><td>Recommended action</td><td>Specific ask — who, what, by when</td></tr>
-              <tr><td>Help needed</td><td>Flag if cross-functional support required</td></tr>
-              <tr><td>Help from whom</td><td>e.g. BizTech, Training, Delivery Ops</td></tr>
-              <tr><td>Submitted by<span class="req-star">*</span></td><td>Your name</td></tr>
-              <tr><td>Target resolution date</td><td>When this should be closed</td></tr>
-              <tr><td>Jira ticket</td><td>Link existing ticket or add after submission</td></tr>
-            </table>
-          </div>
+      <div style="margin-bottom:14px;">
+        <div class="section-label">All form fields</div>
+        <div class="guide-card">
+          <table class="fields-table">
+            <tr><td>Initiative title<span class="req-star">*</span></td><td>Short, specific, action-oriented</td></tr>
+            <tr><td>Insight summary<span class="req-star">*</span></td><td>The QI data driving this — rates, volumes, patterns</td></tr>
+            <tr><td>Quantified opportunity<span class="req-star">*</span></td><td>Numbers only. See callout above.</td></tr>
+            <tr><td>Category<span class="req-star">*</span></td><td>People / Process / Product / Policy</td></tr>
+            <tr><td>Effort tier<span class="req-star">*</span></td><td>See tiers above</td></tr>
+            <tr><td>KPI impacted<span class="req-star">*</span></td><td>Primary metric this moves</td></tr>
+            <tr><td>Estimated impact</td><td>High / Medium / Low</td></tr>
+            <tr><td>Status</td><td>Pending / Active / Blocked / Completed</td></tr>
+            <tr><td>Recommended action<span class="req-star">*</span></td><td>Specific ask — who, what, by when</td></tr>
+            <tr><td>Help needed</td><td>Flag if cross-functional support required</td></tr>
+            <tr><td>Help from whom</td><td>e.g. BizTech, Training, Delivery Ops</td></tr>
+            <tr><td>Submitted by<span class="req-star">*</span></td><td>Your name</td></tr>
+            <tr><td>Target resolution date</td><td>When this should be closed</td></tr>
+            <tr><td>Jira ticket</td><td>Link existing ticket or add after submission</td></tr>
+          </table>
         </div>
-        <div style="display:flex;flex-direction:column;gap:14px;">
-          <div>
-            <div class="section-label">How to submit</div>
-            <div class="guide-card">
-              <div class="steps">
-                <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Open the Submit initiative tab</strong><span>At the top of this tracker</span></div></div>
-                <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Fill in all required fields</strong><span>Marked with <span style="color:#D85A30">*</span> — form blocks submission if any are missing</span></div></div>
-                <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Quantify the opportunity</strong><span>Required. Add data before submitting — don't leave it vague</span></div></div>
-                <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Submit</strong><span>Appears in the dashboard immediately, visible to all stakeholders</span></div></div>
-              </div>
+      </div>
+
+      <div class="guide-grid-2" style="margin-bottom:14px;">
+        <div>
+          <div class="section-label">How to submit</div>
+          <div class="guide-card">
+            <div class="steps">
+              <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Open the Submit initiative tab</strong><span>At the top of this tracker</span></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Fill in all required fields</strong><span>Marked with <span style="color:#D85A30">*</span> — form blocks submission if any are missing</span></div></div>
+              <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Quantify the opportunity</strong><span>Required. Add data before submitting — don't leave it vague</span></div></div>
+              <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Submit</strong><span>Appears in the dashboard immediately, visible to all stakeholders</span></div></div>
             </div>
           </div>
-          <div>
-            <div class="section-label">Status definitions</div>
-            <div class="guide-card">
-              <div class="status-grid">
-                <div class="cat-item"><div class="cat-dot" style="background:#1D9E75"></div><div class="cat-text"><strong>Active</strong><span>In progress — someone is working it</span></div></div>
-                <div class="cat-item"><div class="cat-dot" style="background:#BA7517"></div><div class="cat-text"><strong>Pending</strong><span>Submitted, not yet actioned</span></div></div>
-                <div class="cat-item"><div class="cat-dot" style="background:#A32D2D"></div><div class="cat-text"><strong>Blocked</strong><span>Needs external support to move forward</span></div></div>
-                <div class="cat-item"><div class="cat-dot" style="background:#888780"></div><div class="cat-text"><strong>Completed</strong><span>Action taken and closed out</span></div></div>
-              </div>
+        </div>
+        <div>
+          <div class="section-label">Status definitions</div>
+          <div class="guide-card">
+            <div class="status-grid">
+              <div class="cat-item"><div class="cat-dot" style="background:#1D9E75"></div><div class="cat-text"><strong>Active</strong><span>In progress — someone is working it</span></div></div>
+              <div class="cat-item"><div class="cat-dot" style="background:#BA7517"></div><div class="cat-text"><strong>Pending</strong><span>Submitted, not yet actioned</span></div></div>
+              <div class="cat-item"><div class="cat-dot" style="background:#A32D2D"></div><div class="cat-text"><strong>Blocked</strong><span>Needs external support to move forward</span></div></div>
+              <div class="cat-item"><div class="cat-dot" style="background:#888780"></div><div class="cat-text"><strong>Completed</strong><span>Action taken and closed out</span></div></div>
             </div>
           </div>
         </div>
@@ -469,8 +507,119 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   </div>
 </div>
 
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal" style="display:none" onclick="closeEditModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Edit initiative</h3>
+      <button class="modal-close" onclick="closeEditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Initiative title <span class="req">*</span></label>
+          <input type="text" id="e-title" placeholder="Initiative title">
+        </div>
+        <div class="form-group full">
+          <label>Insight summary <span class="req">*</span></label>
+          <textarea id="e-insight"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Quantified opportunity <span class="req">*</span></label>
+          <textarea id="e-quant" style="min-height:54px"></textarea>
+          <div class="quant-hint">Ticket volume, rate delta, or projected score change — required.</div>
+        </div>
+        <hr class="form-divider" style="grid-column:1/-1">
+        <div class="form-group">
+          <label>Category <span class="req">*</span></label>
+          <select id="e-cat">
+            <option value="">Select...</option>
+            <option>People</option><option>Process</option><option>Product</option><option>Policy</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Effort tier <span class="req">*</span></label>
+          <select id="e-effort">
+            <option value="">Select...</option>
+            <option value="Project">Project</option>
+            <option value="Complex task">Complex task</option>
+            <option value="Continuous improvement">Continuous improvement</option>
+            <option value="Quick win">Quick win</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Primary KPI impacted</label>
+          <select id="e-kpi">
+            <option value="">Select...</option>
+            <option>CSAT</option><option>FCR (First Contact Resolution)</option>
+            <option>AHT (Avg Handle Time)</option><option>DSAT</option>
+            <option>QA Score</option><option>Escalation Rate</option>
+            <option>Reopen Rate</option><option>SLA Compliance</option>
+            <option>Coaching Efficiency</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Estimated impact</label>
+          <select id="e-impact">
+            <option value="">Select...</option>
+            <option>High</option><option>Medium</option><option>Low</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="e-status">
+            <option>Pending</option><option>Active</option><option>Blocked</option><option>Completed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target resolution date</label>
+          <input type="date" id="e-date">
+        </div>
+        <hr class="form-divider" style="grid-column:1/-1">
+        <div class="form-group full">
+          <label>Recommended action / ask</label>
+          <textarea id="e-action" style="min-height:54px"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Help needed?</label>
+          <select id="e-help">
+            <option value="no">No — QI is driving this</option>
+            <option value="yes">Yes — escalation or cross-functional support needed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Help from whom</label>
+          <input type="text" id="e-help-detail" placeholder="e.g. BizTech, Training, Delivery Ops">
+        </div>
+        <div class="form-group">
+          <label>Owner</label>
+          <select id="e-owner">
+            <option value="">Select...</option>
+            <option value="Shine Raj · shine.raj@samsara.com">Shine Raj</option>
+            <option value="Michelle Todd · michelle.todd@samsara.com">Michelle Todd</option>
+            <option value="Frida Dolan · frida.dolan@samsara.com">Frida Dolan</option>
+            <option value="Cecilia Lugo · cecilia.lugo@samsara.com">Cecilia Lugo</option>
+            <option value="Sergio R. Echeverria · sergio.echeverria@samsara.com">Sergio R. Echeverria</option>
+            <option value="Emily Gonzalez · emily.gonzalez@samsara.com">Emily Gonzalez</option>
+            <option value="Isabel Jimenez · isabel.jimenez@samsara.com">Isabel Jimenez</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Jira ticket</label>
+          <input type="text" id="e-jira" placeholder="SUPOPS-XXXX">
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeEditModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const STORAGE_KEY='qi_initiatives_v3';
+let editingId=null;
 let initiatives=[];
 let expandedId=null;
 let catChart,statusChart,effortChart;
@@ -527,12 +676,33 @@ function effortClass(e){
 }
 function impactClass(i){return i==='High'?'impact-high':i==='Medium'?'impact-med':'impact-low';}
 
+function populateOwnerFilter(){
+  const sel=document.getElementById('filterOwner');
+  if(!sel)return;
+  const current=sel.value;
+  const owners=[...new Set(initiatives.map(i=>i.owner).filter(Boolean))].sort();
+  sel.innerHTML='<option value="">All owners</option>'+owners.map(o=>`<option value="${o}"${o===current?'selected':''}>${o.split('·')[0].trim()}</option>`).join('');
+}
+
+function clearFilters(){
+  ['searchInput','filterCat','filterStatus','filterEffort','filterNeed','filterOwner','filterDateFrom','filterDateTo'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(el.tagName==='SELECT')el.value='';
+    else el.value='';
+  });
+  renderTable();
+}
+
 function getFiltered(){
   const q=(document.getElementById('searchInput')?.value||'').toLowerCase();
   const cat=document.getElementById('filterCat')?.value||'';
   const status=document.getElementById('filterStatus')?.value||'';
   const effort=document.getElementById('filterEffort')?.value||'';
   const need=document.getElementById('filterNeed')?.value||'';
+  const owner=document.getElementById('filterOwner')?.value||'';
+  const dateFrom=document.getElementById('filterDateFrom')?.value||'';
+  const dateTo=document.getElementById('filterDateTo')?.value||'';
   return initiatives.filter(i=>{
     if(q&&!i.title.toLowerCase().includes(q)&&!(i.insight||'').toLowerCase().includes(q))return false;
     if(cat&&i.category!==cat)return false;
@@ -540,6 +710,9 @@ function getFiltered(){
     if(effort&&i.effort!==effort)return false;
     if(need==='yes'&&i.helpNeeded!=='yes')return false;
     if(need==='no'&&i.helpNeeded!=='no')return false;
+    if(owner&&i.owner!==owner)return false;
+    if(dateFrom&&i.submitted<dateFrom)return false;
+    if(dateTo&&i.submitted>dateTo)return false;
     return true;
   });
 }
@@ -606,7 +779,7 @@ function renderTable(){
       <td><span class="${impactClass(i.impact)}">${i.impact||'—'}</span></td>
       <td>${i.helpNeeded==='yes'?`<span class="need-badge">${i.helpDetail||'Yes'}</span>`:'<span class="no-need">—</span>'}</td>
       <td>${jiraCell}</td>
-      <td style="font-size:12px">${i.owner}</td>
+      <td style="font-size:12px">${(i.owner||'').split('·')[0].trim()}</td>
       <td style="font-size:11px;color:var(--hint)">${i.submitted}</td>
       <td><button class="expand-btn" onclick="toggleExpand(${i.id})">${exp?'▲':'▼'}</button></td>
     </tr>
@@ -618,6 +791,7 @@ function renderTable(){
       ${i.action?`<p style="margin-top:6px"><strong>Recommended action:</strong> ${i.action}</p>`:''}
       ${i.targetDate?`<p style="margin-top:6px"><strong>Target date:</strong> ${i.targetDate}</p>`:''}
       ${i.effort?`<p style="margin-top:6px"><strong>Effort tier:</strong> ${i.effort} — ${EFFORT_DEFS[i.effort]||''}</p>`:''}
+      <p style="margin-top:6px"><strong>Submitted by:</strong> ${i.owner||'—'}</p>
       <div class="jira-row">
         <span class="jira-label">Jira ticket:</span>
         ${i.jira
@@ -628,6 +802,7 @@ function renderTable(){
             <button class="jira-save-btn" onclick="saveJira(${i.id})">Link ticket</button>`}
       </div>
       <div class="expand-actions">
+        <button class="edit-btn" onclick="openEditModal(${i.id})">✎ Edit</button>
         <button class="delete-btn" onclick="deleteInitiative(${i.id})">✕ Remove</button>
       </div>
     </div></td></tr>`:''}`;
@@ -652,7 +827,7 @@ async function deleteInitiative(id){
   await saveData();render();
 }
 
-function render(){renderKPIs();renderCharts();renderTable();}
+function render(){renderKPIs();renderCharts();populateOwnerFilter();renderTable();}
 
 function exportCSV(){
   const headers=['ID','Title','Category','Effort Tier','KPI Impacted','Status','Impact','Quantified Opportunity','Insight','Recommended Action','Help Needed','Help From','Owner','Submitted','Target Date','Jira Ticket'];
@@ -686,7 +861,8 @@ async function submitInitiative(){
   const cat=document.getElementById('f-cat').value;
   const effort=document.getElementById('f-effort').value;
   const owner=document.getElementById('f-owner').value.trim();
-  if(!title||!insight||!cat||!effort||!owner){alert('Fill in all required fields (marked *).');return;}
+  const action=document.getElementById('f-action').value.trim();
+  if(!title||!insight||!cat||!effort||!owner||!action){alert('Fill in all required fields (marked *).');return;}
   if(!quant){alert('Quantified opportunity is required. Add ticket volume, rate delta, or projected score change — this is what makes the finding actionable for Directors+.');return;}
   const newItem={
     id:Date.now(),title,insight,quantified:quant,category:cat,effort,
@@ -697,7 +873,7 @@ async function submitInitiative(){
     helpDetail:document.getElementById('f-help-detail').value.trim(),
     owner,submitted:new Date().toISOString().split('T')[0],
     targetDate:document.getElementById('f-date').value,
-    action:document.getElementById('f-action').value.trim(),
+    action,
     jira:document.getElementById('f-jira').value.trim().toUpperCase(),
   };
   initiatives.push(newItem);
@@ -705,6 +881,65 @@ async function submitInitiative(){
   resetForm();
   const b=document.getElementById('successBanner');
   b.style.display='block';setTimeout(()=>b.style.display='none',4000);
+}
+
+function openEditModal(id){
+  const i=initiatives.find(x=>x.id===id);
+  if(!i)return;
+  editingId=id;
+  document.getElementById('e-title').value=i.title||'';
+  document.getElementById('e-insight').value=i.insight||'';
+  document.getElementById('e-quant').value=i.quantified||'';
+  document.getElementById('e-cat').value=i.category||'';
+  document.getElementById('e-effort').value=i.effort||'';
+  document.getElementById('e-kpi').value=i.kpi||'';
+  document.getElementById('e-impact').value=i.impact||'';
+  document.getElementById('e-status').value=i.status||'Pending';
+  document.getElementById('e-date').value=i.targetDate||'';
+  document.getElementById('e-action').value=i.action||'';
+  document.getElementById('e-help').value=i.helpNeeded||'no';
+  document.getElementById('e-help-detail').value=i.helpDetail||'';
+  document.getElementById('e-owner').value=i.owner||'';
+  document.getElementById('e-jira').value=i.jira||'';
+  document.getElementById('editModal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeEditModal(e){
+  if(e&&e.target!==document.getElementById('editModal'))return;
+  document.getElementById('editModal').style.display='none';
+  document.body.style.overflow='';
+  editingId=null;
+}
+
+async function saveEdit(){
+  const title=document.getElementById('e-title').value.trim();
+  const insight=document.getElementById('e-insight').value.trim();
+  const quant=document.getElementById('e-quant').value.trim();
+  const cat=document.getElementById('e-cat').value;
+  const effort=document.getElementById('e-effort').value;
+  if(!title||!insight||!cat||!effort){alert('Fill in all required fields (marked *).');return;}
+  if(!quant){alert('Quantified opportunity is required.');return;}
+  const idx=initiatives.findIndex(i=>i.id===editingId);
+  if(idx===-1)return;
+  initiatives[idx]={
+    ...initiatives[idx],
+    title,insight,quantified:quant,category:cat,effort,
+    kpi:document.getElementById('e-kpi').value,
+    impact:document.getElementById('e-impact').value,
+    status:document.getElementById('e-status').value,
+    targetDate:document.getElementById('e-date').value,
+    action:document.getElementById('e-action').value.trim(),
+    helpNeeded:document.getElementById('e-help').value,
+    helpDetail:document.getElementById('e-help-detail').value.trim(),
+    owner:document.getElementById('e-owner').value.trim(),
+    jira:document.getElementById('e-jira').value.trim().toUpperCase(),
+  };
+  await saveData();
+  document.getElementById('editModal').style.display='none';
+  document.body.style.overflow='';
+  editingId=null;
+  render();
 }
 
 loadData();
