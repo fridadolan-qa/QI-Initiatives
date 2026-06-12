@@ -37,12 +37,15 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh;}
 .app{max-width:1040px;margin:0 auto;padding:24px 16px 48px;}
-.header{margin-bottom:20px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.header{margin-bottom:20px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 .header-left h1{font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.3px;}
 .header-left p{font-size:12px;color:var(--muted);margin-top:2px;}
+.header-right{display:flex;align-items:center;gap:10px;}
 .version-badge{font-size:10px;font-weight:600;background:var(--accent-light);color:var(--accent-text);padding:3px 10px;border-radius:20px;letter-spacing:0.4px;}
+.submit-btn{padding:9px 16px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:none;background:var(--accent);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity 0.15s;}
+.submit-btn:hover{opacity:0.9;}
 .tabs{display:flex;gap:4px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:4px;margin-bottom:20px;width:fit-content;}
-.tab{padding:7px 16px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.15s;}
+.tab{padding:7px 16px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.15s;font-family:'DM Sans',sans-serif;}
 .tab.active{background:var(--accent);color:#fff;}
 .tab:hover:not(.active){background:var(--gray-light);color:var(--text);}
 
@@ -62,12 +65,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .date-sep{font-size:12px;color:var(--muted);}
 .clear-filters-btn{padding:6px 12px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-md);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;}
 .clear-filters-btn:hover{background:var(--red-light);color:var(--red);border-color:var(--red);}
-.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
 .filter-select,.search-input{padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;}
 .search-input{width:190px;}
 .filter-select:focus,.search-input:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent;}
-.export-btn{margin-left:auto;padding:6px 14px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-md);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;}
+.export-btn{padding:6px 14px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-md);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:5px;}
 .export-btn:hover{background:var(--gray-light);}
+.export-btn.ml{margin-left:auto;}
 .table-wrap{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);overflow-x:auto;}
 table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:900px;}
 th{text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);padding:10px 10px;border-bottom:0.5px solid var(--border);background:var(--bg);}
@@ -99,39 +102,18 @@ tr:hover td{background:var(--gray-light);}
 .quant-highlight{background:var(--accent-light);color:var(--accent-text);padding:4px 10px;border-radius:var(--r);font-size:12px;font-weight:500;display:inline-block;margin-top:4px;}
 .quant-missing{background:var(--red-light);color:var(--red-text);padding:4px 10px;border-radius:var(--r);font-size:12px;display:inline-block;margin-top:4px;}
 .jira-row{display:flex;align-items:center;gap:8px;margin-top:10px;}
-.jira-input{padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:12px;font-family:'DM Sans',sans-serif;width:160px;}
-.jira-input:focus{outline:2px solid var(--accent);outline-offset:1px;}
-.jira-save-btn{padding:5px 12px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-md);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;}
-.jira-save-btn:hover{background:var(--gray-light);}
 .jira-link{font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;}
 .jira-link:hover{text-decoration:underline;}
 .jira-label{font-size:12px;color:var(--muted);}
-.expand-actions{display:flex;gap:8px;margin-top:12px;align-items:center;}
-.delete-btn{background:none;border:none;color:var(--hint);cursor:pointer;font-size:12px;padding:3px 8px;border-radius:var(--r);font-family:'DM Sans',sans-serif;}
-.delete-btn:hover{color:var(--red);background:var(--red-light);}
 .empty-state{padding:40px;text-align:center;color:var(--muted);font-size:13px;}
-
-/* ── FORM ── */
-.form-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--rl);padding:24px;max-width:680px;}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.form-group{display:flex;flex-direction:column;gap:5px;}
-.form-group.full{grid-column:1/-1;}
-label{font-size:12px;font-weight:600;color:var(--muted);}
-.req{color:var(--coral);}
-input[type="text"],input[type="date"],select,textarea{width:100%;padding:8px 10px;border:0.5px solid var(--border-md);border-radius:var(--r);background:var(--surface);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent;}
-textarea{resize:vertical;min-height:70px;line-height:1.5;}
-.form-hint{font-size:11px;color:var(--hint);}
-.quant-hint{font-size:11px;color:var(--accent-text);background:var(--accent-light);padding:7px 10px;border-radius:var(--r);margin-top:2px;line-height:1.5;}
-.effort-desc{font-size:11px;color:var(--hint);margin-top:2px;}
-.btn{padding:9px 18px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s;font-family:'DM Sans',sans-serif;}
-.btn-primary{background:var(--accent);color:#fff;}
+.empty-state .es-sub{font-size:12px;color:var(--hint);margin-top:6px;}
+.retry-btn{margin-top:12px;padding:6px 14px;border-radius:var(--r);font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-md);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;}
+.retry-btn:hover{background:var(--gray-light);}
+.data-note{font-size:11px;color:var(--hint);margin-bottom:14px;}
+.data-note a{color:var(--blue);text-decoration:none;}
+.btn{padding:9px 18px;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;}
+.btn-primary{background:var(--accent);color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
 .btn-primary:hover{opacity:0.9;}
-.btn-ghost{background:transparent;color:var(--muted);border:0.5px solid var(--border-md);}
-.btn-ghost:hover{background:var(--gray-light);}
-.form-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
-.success-banner{background:var(--accent-light);border:0.5px solid var(--accent);color:var(--accent-text);border-radius:var(--r);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none;}
-.form-divider{border:none;border-top:0.5px solid var(--border);margin:4px 0;}
 .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-bottom:10px;}
 
 /* ── GUIDE ── */
@@ -170,24 +152,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 .step-text strong{font-size:12px;font-weight:600;display:block;}
 .step-text span{font-size:11px;color:var(--muted);}
 .status-grid{display:flex;flex-direction:column;gap:6px;}
-.status-item{display:flex;gap:10px;align-items:flex-start;}
 .norms-list{display:flex;flex-direction:column;gap:6px;}
 .norm{display:flex;gap:8px;font-size:12px;align-items:flex-start;color:var(--muted);}
 .norm-icon{color:var(--accent);font-weight:700;flex-shrink:0;}
 .guide-footer{margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border);display:flex;justify-content:space-between;}
 .guide-footer span{font-size:11px;color:var(--hint);}
-
-/* ── EDIT MODAL ── */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;}
-.modal{background:var(--surface);border:0.5px solid var(--border-md);border-radius:var(--rl);width:100%;max-width:660px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.25);}
-.modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:0.5px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:1;}
-.modal-header h3{font-family:'DM Serif Display',serif;font-size:17px;}
-.modal-close{background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1;}
-.modal-close:hover{background:var(--gray-light);color:var(--text);}
-.modal-body{padding:20px;}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end;padding:14px 20px;border-top:0.5px solid var(--border);position:sticky;bottom:0;background:var(--surface);}
-.edit-btn{background:none;border:0.5px solid var(--border-md);color:var(--text);font-size:12px;font-weight:500;padding:4px 12px;border-radius:var(--r);cursor:pointer;font-family:'DM Sans',sans-serif;}
-.edit-btn:hover{background:var(--gray-light);}
 </style>
 </head>
 <body>
@@ -197,12 +166,14 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       <h1>QI Initiative Tracker</h1>
       <p>Quality Intelligence insights → business action · Samsara Support Quality</p>
     </div>
-    <span class="version-badge">Live · v1.0</span>
+    <div class="header-right">
+      <span class="version-badge">Live · v2.0</span>
+      <a class="submit-btn" id="submitLink" href="#" target="_blank" rel="noopener">+ Submit an initiative</a>
+    </div>
   </div>
 
   <div class="tabs">
     <button class="tab active" onclick="showTab('dashboard',this)">Dashboard</button>
-    <button class="tab" onclick="showTab('intake',this)">Submit initiative</button>
     <button class="tab" onclick="showTab('guide',this)">Team guide</button>
   </div>
 
@@ -240,9 +211,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
           <input type="date" class="filter-select date-input" id="filterDateTo" onchange="renderTable()" title="Submitted to">
         </div>
         <button class="clear-filters-btn" onclick="clearFilters()">✕ Clear</button>
+        <button class="export-btn ml" onclick="refreshData()">↻ Refresh</button>
         <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
       </div>
     </div>
+    <div class="data-note" id="dataNote"></div>
     <div class="kpi-row" id="kpi-row"></div>
     <div class="charts-row">
       <div class="chart-card">
@@ -280,116 +253,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
     </div>
   </div>
 
-  <!-- INTAKE -->
-  <div id="tab-intake" style="display:none">
-    <div class="success-banner" id="successBanner">Initiative submitted — it now appears in the dashboard.</div>
-    <div class="form-card">
-      <div class="section-label">New QI initiative</div>
-      <div class="form-grid">
-        <div class="form-group full">
-          <label>Initiative title <span class="req">*</span></label>
-          <input type="text" id="f-title" placeholder="e.g. Reduce L1 TS misrouting rate via SOP fix">
-        </div>
-        <div class="form-group full">
-          <label>Insight summary <span class="req">*</span></label>
-          <textarea id="f-insight" placeholder="What QI data or finding is driving this? Include rates, volumes, or patterns observed."></textarea>
-        </div>
-        <div class="form-group full">
-          <label>Quantified opportunity <span class="req">*</span></label>
-          <textarea id="f-quant" style="min-height:54px" placeholder="e.g. ~120 tickets/week affected · est. 8pt CSAT delta · $30k AHT savings"></textarea>
-          <div class="quant-hint">Numbers make this land with Directors+. Include ticket volume, rate delta, or projected score change. Required — don't leave this blank.</div>
-        </div>
-        <hr class="form-divider" style="grid-column:1/-1">
-        <div class="form-group">
-          <label>Category <span class="req">*</span></label>
-          <select id="f-cat">
-            <option value="">Select...</option>
-            <option>People</option><option>Process</option><option>Product</option><option>Policy</option>
-          </select>
-          <span class="form-hint">People = agent behavior · Process = workflow · Product = tooling · Policy = rules</span>
-        </div>
-        <div class="form-group">
-          <label>Effort tier <span class="req">*</span></label>
-          <select id="f-effort" onchange="updateEffortHint()">
-            <option value="">Select...</option>
-            <option value="Project">Project</option>
-            <option value="Complex task">Complex task</option>
-            <option value="Continuous improvement">Continuous improvement</option>
-            <option value="Quick win">Quick win</option>
-          </select>
-          <span class="effort-desc" id="effort-hint">Select a tier to see definition.</span>
-        </div>
-        <div class="form-group">
-          <label>Primary KPI impacted <span class="req">*</span></label>
-          <select id="f-kpi">
-            <option value="">Select...</option>
-            <option>CSAT</option><option>FCR (First Contact Resolution)</option>
-            <option>AHT (Avg Handle Time)</option><option>DSAT</option>
-            <option>QA Score</option><option>Escalation Rate</option>
-            <option>Reopen Rate</option><option>SLA Compliance</option>
-            <option>Coaching Efficiency</option><option>Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Estimated impact</label>
-          <select id="f-impact">
-            <option value="">Select...</option>
-            <option>High</option><option>Medium</option><option>Low</option>
-          </select>
-          <span class="form-hint">High = measurable KPI shift · Med = quality improvement · Low = risk reduction</span>
-        </div>
-        <div class="form-group">
-          <label>Current status</label>
-          <select id="f-status">
-            <option>Pending</option><option>Active</option><option>Blocked</option><option>Completed</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Target resolution date</label>
-          <input type="date" id="f-date">
-        </div>
-        <hr class="form-divider" style="grid-column:1/-1">
-        <div class="form-group full">
-          <label>Recommended action / ask <span class="req">*</span></label>
-          <textarea id="f-action" style="min-height:54px" placeholder="What needs to happen? Who needs to act? What's the specific ask?"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Help needed?</label>
-          <select id="f-help">
-            <option value="no">No — QI is driving this</option>
-            <option value="yes">Yes — escalation or cross-functional support needed</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Help from whom</label>
-          <input type="text" id="f-help-detail" placeholder="e.g. BizTech, Training, Delivery Ops">
-        </div>
-        <div class="form-group">
-          <label>Submitted by <span class="req">*</span></label>
-          <select id="f-owner">
-            <option value="">Select your name...</option>
-            <option value="Cecilia Lugo · cecilia.lugo@samsara.com">Cecilia Lugo</option>
-            <option value="Emily Gonzalez · emily.gonzalez@samsara.com">Emily Gonzalez</option>
-            <option value="Frida Dolan · frida.dolan@samsara.com">Frida Dolan</option>
-            <option value="Isabel Jimenez · isabel.jimenez@samsara.com">Isabel Jimenez</option>
-            <option value="Michelle Todd · michelle.todd@samsara.com">Michelle Todd</option>
-            <option value="Sergio Echeverria · sergio.echeverria@samsara.com">Sergio Echeverria</option>
-            <option value="Shine Raj · shine.raj@samsara.com">Shine Raj</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Jira ticket (if exists)</label>
-          <input type="text" id="f-jira" placeholder="e.g. SUPOPS-6649">
-          <span class="form-hint">Optional — link an existing ticket or add later from the dashboard</span>
-        </div>
-      </div>
-      <div class="form-actions">
-        <button class="btn btn-ghost" onclick="resetForm()">Clear</button>
-        <button class="btn btn-primary" onclick="submitInitiative()">Submit initiative</button>
-      </div>
-    </div>
-  </div>
-
   <!-- GUIDE -->
   <div id="tab-guide" style="display:none">
     <div class="guide">
@@ -406,6 +269,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
 
       <div class="guide-intro">
         <strong>What this is:</strong> A shared dashboard where QA team members log findings from audits, DSAT reviews, and AutoQA data — and track whether the business acted on them. Every initiative ties a QI insight to a KPI, a recommended action, and a quantified business opportunity. The goal is to stop insights from going dark after delivery.
+      </div>
+
+      <div class="quant-callout" style="margin-bottom:20px;">
+        <strong>This dashboard is read-only</strong>
+        <p>It reads live from the QI Initiatives Google Sheet. To add an initiative, use the <strong>+ Submit an initiative</strong> button at the top — it opens the Slack intake workflow. New submissions land in the sheet and appear here on the next refresh.</p>
       </div>
 
       <div class="guide-grid-2">
@@ -439,7 +307,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
       </div>
 
       <div style="margin-bottom:14px;">
-        <div class="section-label">All form fields</div>
+        <div class="section-label">Submission fields</div>
         <div class="guide-card">
           <table class="fields-table">
             <tr><td>Initiative title<span class="req-star">*</span></td><td>Short, specific, action-oriented</td></tr>
@@ -455,7 +323,7 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
             <tr><td>Help from whom</td><td>e.g. BizTech, Training, Delivery Ops</td></tr>
             <tr><td>Submitted by<span class="req-star">*</span></td><td>Your name</td></tr>
             <tr><td>Target resolution date</td><td>When this should be closed</td></tr>
-            <tr><td>Jira ticket</td><td>Link existing ticket or add after submission</td></tr>
+            <tr><td>Jira ticket</td><td>Link existing ticket if one exists</td></tr>
           </table>
         </div>
       </div>
@@ -465,10 +333,10 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
           <div class="section-label">How to submit</div>
           <div class="guide-card">
             <div class="steps">
-              <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Open the Submit initiative tab</strong><span>At the top of this tracker</span></div></div>
-              <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Fill in all required fields</strong><span>Marked with <span style="color:#D85A30">*</span> — form blocks submission if any are missing</span></div></div>
+              <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Click + Submit an initiative</strong><span>Top-right of this tracker — opens the Slack intake workflow</span></div></div>
+              <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Fill in all required fields</strong><span>Marked with <span style="color:#D85A30">*</span> — the workflow won't submit without them</span></div></div>
               <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Quantify the opportunity</strong><span>Required. Add data before submitting — don't leave it vague</span></div></div>
-              <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Submit</strong><span>Appears in the dashboard immediately, visible to all stakeholders</span></div></div>
+              <div class="step"><div class="step-num">4</div><div class="step-text"><strong>Submit</strong><span>Lands in the sheet and shows here on the next refresh</span></div></div>
             </div>
           </div>
         </div>
@@ -491,10 +359,10 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
           <div class="norms-list">
             <div class="norm"><span class="norm-icon">→</span><span>Submit within the same week you identify the finding — don't batch</span></div>
             <div class="norm"><span class="norm-icon">→</span><span>If you're blocked on quantifying, ask Frida before leaving the field blank</span></div>
-            <div class="norm"><span class="norm-icon">→</span><span>Update the status yourself when it changes — don't wait for someone to ask</span></div>
-            <div class="norm"><span class="norm-icon">→</span><span>If help is needed from another team, flag it in the tracker — don't just mention it in Slack</span></div>
-            <div class="norm"><span class="norm-icon">→</span><span>The dashboard is visible to Directors+ — write the insight and recommended action as if they're reading it directly</span></div>
-            <div class="norm"><span class="norm-icon">→</span><span>When a Jira ticket exists, link it in the dashboard row — keeps the paper trail intact</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>Update the status in the sheet yourself when it changes — don't wait for someone to ask</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>If help is needed from another team, flag it on submission — don't just mention it in Slack</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>This dashboard is visible to Directors+ — write the insight and recommended action as if they're reading it directly</span></div>
+            <div class="norm"><span class="norm-icon">→</span><span>When a Jira ticket exists, add it to the row in the sheet — keeps the paper trail intact</span></div>
           </div>
         </div>
       </div>
@@ -507,122 +375,22 @@ textarea{resize:vertical;min-height:70px;line-height:1.5;}
   </div>
 </div>
 
-<!-- EDIT MODAL -->
-<div class="modal-overlay" id="editModal" style="display:none" onclick="closeEditModal(event)">
-  <div class="modal" onclick="event.stopPropagation()">
-    <div class="modal-header">
-      <h3>Edit initiative</h3>
-      <button class="modal-close" onclick="closeEditModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group full">
-          <label>Initiative title <span class="req">*</span></label>
-          <input type="text" id="e-title" placeholder="Initiative title">
-        </div>
-        <div class="form-group full">
-          <label>Insight summary <span class="req">*</span></label>
-          <textarea id="e-insight"></textarea>
-        </div>
-        <div class="form-group full">
-          <label>Quantified opportunity <span class="req">*</span></label>
-          <textarea id="e-quant" style="min-height:54px"></textarea>
-          <div class="quant-hint">Ticket volume, rate delta, or projected score change — required.</div>
-        </div>
-        <hr class="form-divider" style="grid-column:1/-1">
-        <div class="form-group">
-          <label>Category <span class="req">*</span></label>
-          <select id="e-cat">
-            <option value="">Select...</option>
-            <option>People</option><option>Process</option><option>Product</option><option>Policy</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Effort tier <span class="req">*</span></label>
-          <select id="e-effort">
-            <option value="">Select...</option>
-            <option value="Project">Project</option>
-            <option value="Complex task">Complex task</option>
-            <option value="Continuous improvement">Continuous improvement</option>
-            <option value="Quick win">Quick win</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Primary KPI impacted</label>
-          <select id="e-kpi">
-            <option value="">Select...</option>
-            <option>CSAT</option><option>FCR (First Contact Resolution)</option>
-            <option>AHT (Avg Handle Time)</option><option>DSAT</option>
-            <option>QA Score</option><option>Escalation Rate</option>
-            <option>Reopen Rate</option><option>SLA Compliance</option>
-            <option>Coaching Efficiency</option><option>Other</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Estimated impact</label>
-          <select id="e-impact">
-            <option value="">Select...</option>
-            <option>High</option><option>Medium</option><option>Low</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Status</label>
-          <select id="e-status">
-            <option>Pending</option><option>Active</option><option>Blocked</option><option>Completed</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Target resolution date</label>
-          <input type="date" id="e-date">
-        </div>
-        <hr class="form-divider" style="grid-column:1/-1">
-        <div class="form-group full">
-          <label>Recommended action / ask</label>
-          <textarea id="e-action" style="min-height:54px"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Help needed?</label>
-          <select id="e-help">
-            <option value="no">No — QI is driving this</option>
-            <option value="yes">Yes — escalation or cross-functional support needed</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Help from whom</label>
-          <input type="text" id="e-help-detail" placeholder="e.g. BizTech, Training, Delivery Ops">
-        </div>
-        <div class="form-group">
-          <label>Owner</label>
-          <select id="e-owner">
-            <option value="">Select...</option>
-            <option value="Shine Raj · shine.raj@samsara.com">Shine Raj</option>
-            <option value="Michelle Todd · michelle.todd@samsara.com">Michelle Todd</option>
-            <option value="Frida Dolan · frida.dolan@samsara.com">Frida Dolan</option>
-            <option value="Cecilia Lugo · cecilia.lugo@samsara.com">Cecilia Lugo</option>
-            <option value="Sergio R. Echeverria · sergio.echeverria@samsara.com">Sergio R. Echeverria</option>
-            <option value="Emily Gonzalez · emily.gonzalez@samsara.com">Emily Gonzalez</option>
-            <option value="Isabel Jimenez · isabel.jimenez@samsara.com">Isabel Jimenez</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Jira ticket</label>
-          <input type="text" id="e-jira" placeholder="SUPOPS-XXXX">
-        </div>
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeEditModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveEdit()">Save changes</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const STORAGE_KEY='qi_initiatives_v3';
-let editingId=null;
+/* ============================================================
+   CONFIG — set these two values
+   ============================================================ */
+// Google Sheets published CSV (read-only data source)
+const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vQCfYXLoj3H-iqc2Ry8U-yWNmDLQXanNRz8tAydl4vVshFkIOX6UYKegI1DfrbUM5HtuB7EhB9mu4nl/pub?gid=0&single=true&output=csv';
+// Slack intake workflow URL — REPLACE with the link Slack generated when you published the workflow
+const SUBMIT_URL='https://samsara-net.slack.com/archives/C06696MURDF/p1781228724505509';
+// Jira browse base — initiative Jira IDs are appended to this
+const JIRA_BASE='https://samsara.atlassian-us-gov-mod.net/browse/';
+/* ============================================================ */
+
 let initiatives=[];
 let expandedId=null;
 let catChart,statusChart,effortChart;
+let lastLoaded=null;
 
 const EFFORT_DEFS={
   'Project':'2+ weeks or 10+ hours — full scoped project',
@@ -631,41 +399,230 @@ const EFFORT_DEFS={
   'Quick win':'<1 day or <2 hours — fast, low-friction action'
 };
 
-const JIRA_BASE='https://samsara.atlassian-us-gov-mod.net/browse/';
+/* ---------- Submit button ---------- */
+(function initSubmit(){
+  const a=document.getElementById('submitLink');
+  if(SUBMIT_URL && SUBMIT_URL!=='PASTE_SLACK_WORKFLOW_URL_HERE'){
+    a.href=SUBMIT_URL;
+  }else{
+    a.href='#';
+    a.title='Set SUBMIT_URL in the script to enable this button';
+    a.addEventListener('click',e=>{e.preventDefault();alert('Submission link not set yet.\\n\\nOpen this file and replace PASTE_SLACK_WORKFLOW_URL_HERE (near the top of the <script> block) with the URL Slack gave you when you published the workflow.');});
+  }
+})();
 
-const SEED=[
-  {id:1,title:'Reduce L1 TS misrouting via SOP update',insight:'QA audit data shows 18% of L1 TS tickets are misrouted to L2 due to ambiguous escalation criteria. Pattern concentrated in hardware troubleshooting queue.',quantified:'~85 tickets/week misrouted · est. 12pt escalation rate reduction',category:'Process',effort:'Complex task',kpi:'Escalation Rate',status:'Active',impact:'High',helpNeeded:'yes',helpDetail:'Training',owner:'Sergio E.',submitted:'2026-05-14',targetDate:'2026-06-30',action:'Rewrite escalation decision tree with Training; push to L1 TS coaches by June.',jira:''},
-  {id:2,title:'Coaching cadence gap — L1 CS bottom quartile agents',insight:'DSAT Review cycle identified 14 agents with >3 consecutive failing QA scores with no documented coaching touchpoint in the last 30 days.',quantified:'14 agents · est. 6pt avg QA score lift if coaching actioned within 5 days',category:'People',effort:'Project',kpi:'QA Score',status:'Pending',impact:'High',helpNeeded:'yes',helpDetail:'Delivery Ops, L1 CS Managers',owner:'Isabel J.',submitted:'2026-05-20',targetDate:'2026-06-15',action:'Define closed-loop SLA between QA finding and TL coaching acknowledgment.',jira:''},
-  {id:3,title:'DSAT root cause — billing confusion post-pricing change',insight:'DSAT classification over 3 weeks shows 31% of L1 CS DSATs cite billing confusion tied to the March pricing update.',quantified:'~62 DSATs/week attributable · 31% of total L1 CS DSAT volume',category:'Policy',effort:'Quick win',kpi:'DSAT',status:'Active',impact:'High',helpNeeded:'no',helpDetail:'',owner:'Emily G.',submitted:'2026-05-22',targetDate:'2026-07-01',action:'Push findings to Policy team for clarification memo; QI to track DSAT rate post-update.',jira:''},
-  {id:4,title:'Rippit rubric calibration — L2 TS scoring drift',insight:'Inter-rater reliability on L2 TS AutoQA scores dropped from 91% to 78% over 6 weeks.',quantified:'IRR back to 89% post-calibration · 13pt scoring drift corrected',category:'People',effort:'Continuous improvement',kpi:'QA Score',status:'Completed',impact:'Medium',helpNeeded:'no',helpDetail:'',owner:'Cecilia L.',submitted:'2026-04-10',targetDate:'2026-05-01',action:'Monthly calibration sessions reinstated. Rubric anchors updated.',jira:''},
-  {id:5,title:'Zendesk macro library — deprecated macros driving policy violations',insight:'Policy/Product audit surfaced 23 active macros referencing deprecated workflows or incorrect refund language.',quantified:'23 macros · 400+ uses/week · est. 5pt CSAT risk if unresolved',category:'Product',effort:'Complex task',kpi:'CSAT',status:'Blocked',impact:'Medium',helpNeeded:'yes',helpDetail:'BizTech',owner:'Sergio E.',submitted:'2026-05-05',targetDate:'2026-06-20',action:'BizTech access needed to deprecate/update macros. QI has the full audit list ready.',jira:''},
-];
+/* ---------- CSV parsing ---------- */
+// Robust RFC-4180-ish parser: handles quoted fields, escaped quotes, commas + newlines inside quotes.
+function parseCSV(text){
+  const rows=[];let row=[];let field='';let i=0;let inQ=false;
+  text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  while(i<text.length){
+    const c=text[i];
+    if(inQ){
+      if(c==='"'){
+        if(text[i+1]==='"'){field+='"';i+=2;continue;}
+        inQ=false;i++;continue;
+      }
+      field+=c;i++;continue;
+    }
+    if(c==='"'){inQ=true;i++;continue;}
+    if(c===','){row.push(field);field='';i++;continue;}
+    if(c==='\n'){row.push(field);rows.push(row);row=[];field='';i++;continue;}
+    field+=c;i++;
+  }
+  // last field/row
+  if(field.length>0||row.length>0){row.push(field);rows.push(row);}
+  return rows.filter(r=>r.length>1||(r.length===1&&r[0].trim()!==''));
+}
 
+// Map a normalized header string to an internal field key. Order matters (specific first).
+function headerToKey(hRaw){
+  const h=(hRaw||'').toLowerCase().trim();
+  if(!h)return null;
+  if(h.includes('jira'))return 'jira';
+  if(h.includes('title')||h.includes('initiative name'))return 'title';
+  if(h.includes('insight')||h.includes('finding')||h.includes('summary'))return 'insight';
+  if(h.includes('quantif')||h.includes('opportunity'))return 'quantified';
+  if(h.includes('categor'))return 'category';
+  if(h.includes('effort')||h.includes('tier'))return 'effort';
+  if(h.includes('kpi')||h.includes('metric'))return 'kpi';
+  if(h.includes('impact'))return 'impact';
+  if(h.includes('status'))return 'status';
+  if(h.includes('help')&&(h.includes('whom')||h.includes('from')||h.includes('detail')||h.includes('who')))return 'helpDetail';
+  if(h.includes('help')||h.includes('support'))return 'helpNeeded';
+  if(h.includes('action')||h.includes('recommend')||h.includes('ask'))return 'action';
+  if(h.includes('note')||h.includes('comment')||h.includes('context'))return 'notes';
+  if(h.includes('last updated')||h.includes('updated')||h.includes('modified'))return 'lastUpdated';
+  if(h.includes('target')||h.includes('resolution')||h.includes('due')||h.includes('by when'))return 'targetDate';
+  if(h.includes('owner')||h.includes('submitted by')||h.includes('your name')||h.includes('name')||h.includes('email'))return 'owner';
+  if(h.includes('timestamp')||h.includes('submitted')||h.includes('date'))return 'submitted';
+  return null;
+}
+
+// Normalize a free-text date-ish value to YYYY-MM-DD (for string-comparison filters).
+function normDate(v){
+  if(!v)return '';
+  v=v.trim();
+  // Already YYYY-MM-DD (optionally with time)
+  let m=v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(m)return m[1]+'-'+m[2]+'-'+m[3];
+  // M/D/YYYY or MM/DD/YYYY (US, common in Sheets), optional time
+  m=v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if(m){const mm=m[1].padStart(2,'0');const dd=m[2].padStart(2,'0');return m[3]+'-'+mm+'-'+dd;}
+  // Fallback: let Date try
+  const d=new Date(v);
+  if(!isNaN(d)){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+  return v;
+}
+
+function canonCategory(v){
+  const s=(v||'').toLowerCase();
+  if(s.includes('people'))return 'People';
+  if(s.includes('process'))return 'Process';
+  if(s.includes('product'))return 'Product';
+  if(s.includes('policy'))return 'Policy';
+  return v||'';
+}
+function canonStatus(v){
+  const s=(v||'').toLowerCase();
+  if(s.includes('active')||s.includes('progress'))return 'Active';
+  if(s.includes('block'))return 'Blocked';
+  if(s.includes('complete')||s.includes('done')||s.includes('closed'))return 'Completed';
+  if(s.includes('pending')||s.includes('new')||s.includes('submitted'))return 'Pending';
+  return v||'Pending';
+}
+function canonEffort(v){
+  const s=(v||'').toLowerCase();
+  if(s.includes('project'))return 'Project';
+  if(s.includes('complex'))return 'Complex task';
+  if(s.includes('continuous')||s.includes('improvement'))return 'Continuous improvement';
+  if(s.includes('quick'))return 'Quick win';
+  return v||'';
+}
+function canonImpact(v){
+  const s=(v||'').toLowerCase();
+  if(s.includes('high'))return 'High';
+  if(s.includes('med'))return 'Medium';
+  if(s.includes('low'))return 'Low';
+  return v||'';
+}
+function canonHelp(v){
+  const s=(v||'').toLowerCase().trim();
+  if(!s)return 'no';
+  if(s.startsWith('y')||s.includes('yes')||s.includes('escalat')||s.includes('cross'))return 'yes';
+  if(s.startsWith('n')||s==='none')return 'no';
+  return 'no';
+}
+
+function rowsToInitiatives(rows){
+  if(!rows.length)return [];
+  const headers=rows[0];
+  const colKey=headers.map(headerToKey); // index -> key | null
+  const out=[];
+  for(let r=1;r<rows.length;r++){
+    const cells=rows[r];
+    const rec={};
+    colKey.forEach((k,idx)=>{
+      if(!k)return;
+      const val=(cells[idx]||'').trim();
+      // don't overwrite a populated field with a later empty mapping to same key
+      if(rec[k]===undefined||rec[k]==='')rec[k]=val;
+    });
+    // skip blank rows
+    const hasAny=Object.values(rec).some(v=>v&&v.trim&&v.trim()!=='');
+    if(!hasAny)continue;
+
+    // Help handling. Sheet may have one "Help Needed" column (free text or yes/no),
+    // and/or a separate "help from whom" detail column.
+    let helpDetail=(rec.helpDetail||'').trim();
+    let helpNeeded='no';
+    const rawHelp=(rec.helpNeeded||'').trim();
+    if(rawHelp){
+      const low=rawHelp.toLowerCase();
+      if(['no','none','n/a','na','n','-'].includes(low)){helpNeeded='no';}
+      else if(['yes','y'].includes(low)){helpNeeded='yes';}
+      else{ // descriptive text (e.g. "BizTech" or "Yes — Training") implies help is needed
+        helpNeeded='yes';
+        if(!helpDetail)helpDetail=rawHelp.replace(/^(yes|y)\s*[-—:,]\s*/i,'').trim();
+      }
+    }
+    // If only a "help from whom" detail column exists, infer from it
+    if(rec.helpNeeded===undefined&&helpDetail&&!['no','none','n/a'].includes(helpDetail.toLowerCase()))helpNeeded='yes';
+
+    out.push({
+      id:r,
+      title:(rec.title||'').trim()||'(untitled)',
+      insight:(rec.insight||'').trim(),
+      quantified:(rec.quantified||'').trim(),
+      category:canonCategory(rec.category),
+      effort:canonEffort(rec.effort),
+      kpi:(rec.kpi||'').trim(),
+      impact:canonImpact(rec.impact),
+      status:canonStatus(rec.status),
+      helpNeeded,
+      helpDetail,
+      owner:(rec.owner||'').trim(),
+      submitted:normDate(rec.submitted),
+      targetDate:normDate(rec.targetDate),
+      action:(rec.action||'').trim(),
+      notes:(rec.notes||'').trim(),
+      lastUpdated:normDate(rec.lastUpdated),
+      jira:(rec.jira||'').trim().toUpperCase()
+    });
+  }
+  return out;
+}
+
+/* ---------- Data load ---------- */
 async function loadData(){
+  setDataNote('Loading from Google Sheet…');
   try{
-    const res=await window.storage.get(STORAGE_KEY);
-    if(res&&res.value){initiatives=JSON.parse(res.value);}
-    else{initiatives=SEED;await saveData();}
-  }catch{initiatives=SEED;}
-  render();
+    const res=await fetch(CSV_URL,{cache:'no-store'});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    const rows=parseCSV(text);
+    initiatives=rowsToInitiatives(rows);
+    lastLoaded=new Date();
+    render();
+    if(!initiatives.length){
+      setDataNote('Connected to the sheet, but no initiative rows were found.');
+    }else{
+      setDataNote(`Live from Google Sheet · ${initiatives.length} initiatives · loaded ${lastLoaded.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`);
+    }
+  }catch(err){
+    initiatives=[];
+    render();
+    setDataNote('');
+    showLoadError(err);
+  }
 }
 
-async function saveData(){
-  try{await window.storage.set(STORAGE_KEY,JSON.stringify(initiatives));}catch{}
+function refreshData(){loadData();}
+
+function setDataNote(msg){
+  const el=document.getElementById('dataNote');
+  if(!el)return;
+  el.innerHTML=msg?msg:'';
 }
 
+function showLoadError(err){
+  document.getElementById('kpi-row').innerHTML='';
+  document.getElementById('initiative-tbody').innerHTML=
+    `<tr><td colspan="11"><div class="empty-state">
+       Couldn't load data from the Google Sheet.
+       <div class="es-sub">${(err&&err.message)||'Network or permission error.'} — confirm the sheet is published to the web as CSV and reachable.</div>
+       <button class="retry-btn" onclick="loadData()">↻ Retry</button>
+     </div></td></tr>`;
+}
+
+/* ---------- View helpers ---------- */
 function showTab(tab,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  ['dashboard','intake','guide'].forEach(t=>{
+  ['dashboard','guide'].forEach(t=>{
     document.getElementById('tab-'+t).style.display=t===tab?'':'none';
   });
   if(tab==='dashboard')render();
-}
-
-function updateEffortHint(){
-  const v=document.getElementById('f-effort').value;
-  document.getElementById('effort-hint').textContent=EFFORT_DEFS[v]||'Select a tier to see definition.';
 }
 
 function catClass(c){return 'cat-'+(c||'').toLowerCase();}
@@ -675,21 +632,20 @@ function effortClass(e){
   return m[e]||'effort-ci';
 }
 function impactClass(i){return i==='High'?'impact-high':i==='Medium'?'impact-med':'impact-low';}
+function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 function populateOwnerFilter(){
   const sel=document.getElementById('filterOwner');
   if(!sel)return;
   const current=sel.value;
   const owners=[...new Set(initiatives.map(i=>i.owner).filter(Boolean))].sort();
-  sel.innerHTML='<option value="">All owners</option>'+owners.map(o=>`<option value="${o}"${o===current?'selected':''}>${o.split('·')[0].trim()}</option>`).join('');
+  sel.innerHTML='<option value="">All owners</option>'+owners.map(o=>`<option value="${esc(o)}"${o===current?' selected':''}>${esc(o.split('·')[0].trim())}</option>`).join('');
 }
 
 function clearFilters(){
   ['searchInput','filterCat','filterStatus','filterEffort','filterNeed','filterOwner','filterDateFrom','filterDateTo'].forEach(id=>{
     const el=document.getElementById(id);
-    if(!el)return;
-    if(el.tagName==='SELECT')el.value='';
-    else el.value='';
+    if(el)el.value='';
   });
   renderTable();
 }
@@ -704,15 +660,15 @@ function getFiltered(){
   const dateFrom=document.getElementById('filterDateFrom')?.value||'';
   const dateTo=document.getElementById('filterDateTo')?.value||'';
   return initiatives.filter(i=>{
-    if(q&&!i.title.toLowerCase().includes(q)&&!(i.insight||'').toLowerCase().includes(q))return false;
+    if(q&&!(i.title||'').toLowerCase().includes(q)&&!(i.insight||'').toLowerCase().includes(q)&&!(i.notes||'').toLowerCase().includes(q)&&!(i.action||'').toLowerCase().includes(q))return false;
     if(cat&&i.category!==cat)return false;
     if(status&&i.status!==status)return false;
     if(effort&&i.effort!==effort)return false;
     if(need==='yes'&&i.helpNeeded!=='yes')return false;
     if(need==='no'&&i.helpNeeded!=='no')return false;
     if(owner&&i.owner!==owner)return false;
-    if(dateFrom&&i.submitted<dateFrom)return false;
-    if(dateTo&&i.submitted>dateTo)return false;
+    if(dateFrom&&i.submitted&&i.submitted<dateFrom)return false;
+    if(dateTo&&i.submitted&&i.submitted>dateTo)return false;
     return true;
   });
 }
@@ -764,46 +720,45 @@ function renderCharts(){
 function renderTable(){
   const filtered=getFiltered();
   const tbody=document.getElementById('initiative-tbody');
-  if(!filtered.length){tbody.innerHTML='<tr><td colspan="11"><div class="empty-state">No initiatives match the current filters.</div></td></tr>';return;}
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="11"><div class="empty-state">No initiatives match the current filters.</div></td></tr>';
+    return;
+  }
   tbody.innerHTML=filtered.map(i=>{
     const exp=expandedId===i.id;
     const jiraCell=i.jira
-      ?`<a class="jira-link" href="${JIRA_BASE}${i.jira}" target="_blank">${i.jira}</a>`
+      ?`<a class="jira-link" href="${JIRA_BASE}${esc(i.jira)}" target="_blank" rel="noopener">${esc(i.jira)}</a>`
       :`<span class="no-need">—</span>`;
     return`<tr>
-      <td style="font-weight:500;line-height:1.3">${i.title}</td>
-      <td><span class="badge ${catClass(i.category)}">${i.category}</span></td>
-      <td><span class="badge ${effortClass(i.effort)}">${i.effort||'—'}</span></td>
-      <td style="font-size:12px;color:var(--muted)">${i.kpi||'—'}</td>
-      <td><span class="badge ${statusClass(i.status)}">${i.status}</span></td>
-      <td><span class="${impactClass(i.impact)}">${i.impact||'—'}</span></td>
-      <td>${i.helpNeeded==='yes'?`<span class="need-badge">${i.helpDetail||'Yes'}</span>`:'<span class="no-need">—</span>'}</td>
+      <td style="font-weight:500;line-height:1.3">${esc(i.title)}</td>
+      <td>${i.category?`<span class="badge ${catClass(i.category)}">${esc(i.category)}</span>`:'—'}</td>
+      <td>${i.effort?`<span class="badge ${effortClass(i.effort)}">${esc(i.effort)}</span>`:'—'}</td>
+      <td style="font-size:12px;color:var(--muted)">${esc(i.kpi)||'—'}</td>
+      <td><span class="badge ${statusClass(i.status)}">${esc(i.status)}</span></td>
+      <td><span class="${impactClass(i.impact)}">${esc(i.impact)||'—'}</span></td>
+      <td>${i.helpNeeded==='yes'?`<span class="need-badge">${esc(i.helpDetail)||'Yes'}</span>`:'<span class="no-need">—</span>'}</td>
       <td>${jiraCell}</td>
-      <td style="font-size:12px">${(i.owner||'').split('·')[0].trim()}</td>
-      <td style="font-size:11px;color:var(--hint)">${i.submitted}</td>
+      <td style="font-size:12px">${esc((i.owner||'').split('·')[0].trim())}</td>
+      <td style="font-size:11px;color:var(--hint)">${esc(i.submitted)||'—'}</td>
       <td><button class="expand-btn" onclick="toggleExpand(${i.id})">${exp?'▲':'▼'}</button></td>
     </tr>
     ${exp?`<tr class="expand-row"><td colspan="11"><div class="expand-content">
-      ${i.insight?`<p><strong>Insight:</strong> ${i.insight}</p>`:''}
+      ${i.insight?`<p><strong>Insight:</strong> ${esc(i.insight)}</p>`:''}
       ${i.quantified
-        ?`<p style="margin-top:6px"><strong>Quantified opportunity:</strong> <span class="quant-highlight">${i.quantified}</span></p>`
-        :`<p style="margin-top:6px"><span class="quant-missing">Quantified opportunity not filled in — update this to make the finding actionable.</span></p>`}
-      ${i.action?`<p style="margin-top:6px"><strong>Recommended action:</strong> ${i.action}</p>`:''}
-      ${i.targetDate?`<p style="margin-top:6px"><strong>Target date:</strong> ${i.targetDate}</p>`:''}
-      ${i.effort?`<p style="margin-top:6px"><strong>Effort tier:</strong> ${i.effort} — ${EFFORT_DEFS[i.effort]||''}</p>`:''}
-      <p style="margin-top:6px"><strong>Submitted by:</strong> ${i.owner||'—'}</p>
+        ?`<p style="margin-top:6px"><strong>Quantified opportunity:</strong> <span class="quant-highlight">${esc(i.quantified)}</span></p>`
+        :`<p style="margin-top:6px"><span class="quant-missing">Quantified opportunity not filled in — update the sheet to make the finding actionable.</span></p>`}
+      ${i.action?`<p style="margin-top:6px"><strong>Recommended action:</strong> ${esc(i.action)}</p>`:''}
+      ${i.helpNeeded==='yes'?`<p style="margin-top:6px"><strong>Help needed:</strong> ${esc(i.helpDetail)||'Cross-functional support requested'}</p>`:''}
+      ${i.notes?`<p style="margin-top:6px"><strong>Notes:</strong> ${esc(i.notes)}</p>`:''}
+      ${i.targetDate?`<p style="margin-top:6px"><strong>Target date:</strong> ${esc(i.targetDate)}</p>`:''}
+      ${i.effort?`<p style="margin-top:6px"><strong>Effort tier:</strong> ${esc(i.effort)} — ${esc(EFFORT_DEFS[i.effort]||'')}</p>`:''}
+      <p style="margin-top:6px"><strong>Submitted by:</strong> ${esc(i.owner)||'—'}</p>
+      ${i.lastUpdated?`<p style="margin-top:6px"><strong>Last updated:</strong> ${esc(i.lastUpdated)}</p>`:''}
       <div class="jira-row">
         <span class="jira-label">Jira ticket:</span>
         ${i.jira
-          ?`<a class="jira-link" href="${JIRA_BASE}${i.jira}" target="_blank">${i.jira}</a>
-             <input class="jira-input" id="jira-edit-${i.id}" type="text" value="${i.jira}" placeholder="SUPOPS-XXXX" style="width:130px">
-             <button class="jira-save-btn" onclick="saveJira(${i.id})">Update</button>`
-          :`<input class="jira-input" id="jira-edit-${i.id}" type="text" placeholder="SUPOPS-XXXX">
-            <button class="jira-save-btn" onclick="saveJira(${i.id})">Link ticket</button>`}
-      </div>
-      <div class="expand-actions">
-        <button class="edit-btn" onclick="openEditModal(${i.id})">✎ Edit</button>
-        <button class="delete-btn" onclick="deleteInitiative(${i.id})">✕ Remove</button>
+          ?`<a class="jira-link" href="${JIRA_BASE}${esc(i.jira)}" target="_blank" rel="noopener">${esc(i.jira)}</a>`
+          :`<span class="no-need">Not linked</span>`}
       </div>
     </div></td></tr>`:''}`;
   }).join('');
@@ -811,135 +766,24 @@ function renderTable(){
 
 function toggleExpand(id){expandedId=expandedId===id?null:id;renderTable();}
 
-async function saveJira(id){
-  const val=document.getElementById('jira-edit-'+id)?.value.trim().toUpperCase();
-  const idx=initiatives.findIndex(i=>i.id===id);
-  if(idx===-1)return;
-  initiatives[idx].jira=val;
-  await saveData();
-  renderTable();
-  renderKPIs();
-}
-
-async function deleteInitiative(id){
-  if(!confirm('Remove this initiative?'))return;
-  initiatives=initiatives.filter(i=>i.id!==id);
-  await saveData();render();
-}
-
 function render(){renderKPIs();renderCharts();populateOwnerFilter();renderTable();}
 
 function exportCSV(){
-  const headers=['ID','Title','Category','Effort Tier','KPI Impacted','Status','Impact','Quantified Opportunity','Insight','Recommended Action','Help Needed','Help From','Owner','Submitted','Target Date','Jira Ticket'];
+  const headers=['ID','Title','Category','Effort Tier','KPI Impacted','Status','Impact','Quantified Opportunity','Recommended Action','Help Needed','Help Detail','Owner','Submitted','Target Date','Notes','Last Updated','Jira Ticket'];
+  const q=s=>`"${(s==null?'':String(s)).replace(/"/g,'""')}"`;
   const rows=initiatives.map(i=>[
-    i.id,`"${(i.title||'').replace(/"/g,'""')}"`,i.category,`"${i.effort||''}"`,
-    i.kpi,i.status,i.impact,`"${(i.quantified||'').replace(/"/g,'""')}"`,
-    `"${(i.insight||'').replace(/"/g,'""')}"`,`"${(i.action||'').replace(/"/g,'""')}"`,
-    i.helpNeeded==='yes'?'Yes':'No',`"${(i.helpDetail||'').replace(/"/g,'""')}"`,
-    i.owner,i.submitted,i.targetDate||'',i.jira||''
+    i.id,q(i.title),q(i.category),q(i.effort),
+    q(i.kpi),q(i.status),q(i.impact),q(i.quantified),
+    q(i.action),
+    i.helpNeeded==='yes'?'Yes':'No',q(i.helpDetail),
+    q(i.owner),q(i.submitted),q(i.targetDate),q(i.notes),q(i.lastUpdated),q(i.jira)
   ]);
-  const csv=[headers.join(','),...rows.map(r=>r.join(','))].join('\n');
+  const csv=[headers.map(q).join(','),...rows.map(r=>r.join(','))].join('\n');
   const blob=new Blob([csv],{type:'text/csv'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
   a.href=url;a.download=`qi-initiatives-${new Date().toISOString().split('T')[0]}.csv`;
   a.click();URL.revokeObjectURL(url);
-}
-
-function resetForm(){
-  ['f-title','f-insight','f-quant','f-cat','f-effort','f-kpi','f-impact','f-status','f-help','f-help-detail','f-owner','f-date','f-action','f-jira'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.value=el.tagName==='SELECT'?el.options[0].value:'';
-  });
-  document.getElementById('effort-hint').textContent='Select a tier to see definition.';
-}
-
-async function submitInitiative(){
-  const title=document.getElementById('f-title').value.trim();
-  const insight=document.getElementById('f-insight').value.trim();
-  const quant=document.getElementById('f-quant').value.trim();
-  const cat=document.getElementById('f-cat').value;
-  const effort=document.getElementById('f-effort').value;
-  const owner=document.getElementById('f-owner').value.trim();
-  const action=document.getElementById('f-action').value.trim();
-  if(!title||!insight||!cat||!effort||!owner||!action){alert('Fill in all required fields (marked *).');return;}
-  if(!quant){alert('Quantified opportunity is required. Add ticket volume, rate delta, or projected score change — this is what makes the finding actionable for Directors+.');return;}
-  const newItem={
-    id:Date.now(),title,insight,quantified:quant,category:cat,effort,
-    kpi:document.getElementById('f-kpi').value,
-    impact:document.getElementById('f-impact').value||'Medium',
-    status:document.getElementById('f-status').value||'Pending',
-    helpNeeded:document.getElementById('f-help').value,
-    helpDetail:document.getElementById('f-help-detail').value.trim(),
-    owner,submitted:new Date().toISOString().split('T')[0],
-    targetDate:document.getElementById('f-date').value,
-    action,
-    jira:document.getElementById('f-jira').value.trim().toUpperCase(),
-  };
-  initiatives.push(newItem);
-  await saveData();
-  resetForm();
-  const b=document.getElementById('successBanner');
-  b.style.display='block';setTimeout(()=>b.style.display='none',4000);
-}
-
-function openEditModal(id){
-  const i=initiatives.find(x=>x.id===id);
-  if(!i)return;
-  editingId=id;
-  document.getElementById('e-title').value=i.title||'';
-  document.getElementById('e-insight').value=i.insight||'';
-  document.getElementById('e-quant').value=i.quantified||'';
-  document.getElementById('e-cat').value=i.category||'';
-  document.getElementById('e-effort').value=i.effort||'';
-  document.getElementById('e-kpi').value=i.kpi||'';
-  document.getElementById('e-impact').value=i.impact||'';
-  document.getElementById('e-status').value=i.status||'Pending';
-  document.getElementById('e-date').value=i.targetDate||'';
-  document.getElementById('e-action').value=i.action||'';
-  document.getElementById('e-help').value=i.helpNeeded||'no';
-  document.getElementById('e-help-detail').value=i.helpDetail||'';
-  document.getElementById('e-owner').value=i.owner||'';
-  document.getElementById('e-jira').value=i.jira||'';
-  document.getElementById('editModal').style.display='flex';
-  document.body.style.overflow='hidden';
-}
-
-function closeEditModal(e){
-  if(e&&e.target!==document.getElementById('editModal'))return;
-  document.getElementById('editModal').style.display='none';
-  document.body.style.overflow='';
-  editingId=null;
-}
-
-async function saveEdit(){
-  const title=document.getElementById('e-title').value.trim();
-  const insight=document.getElementById('e-insight').value.trim();
-  const quant=document.getElementById('e-quant').value.trim();
-  const cat=document.getElementById('e-cat').value;
-  const effort=document.getElementById('e-effort').value;
-  if(!title||!insight||!cat||!effort){alert('Fill in all required fields (marked *).');return;}
-  if(!quant){alert('Quantified opportunity is required.');return;}
-  const idx=initiatives.findIndex(i=>i.id===editingId);
-  if(idx===-1)return;
-  initiatives[idx]={
-    ...initiatives[idx],
-    title,insight,quantified:quant,category:cat,effort,
-    kpi:document.getElementById('e-kpi').value,
-    impact:document.getElementById('e-impact').value,
-    status:document.getElementById('e-status').value,
-    targetDate:document.getElementById('e-date').value,
-    action:document.getElementById('e-action').value.trim(),
-    helpNeeded:document.getElementById('e-help').value,
-    helpDetail:document.getElementById('e-help-detail').value.trim(),
-    owner:document.getElementById('e-owner').value.trim(),
-    jira:document.getElementById('e-jira').value.trim().toUpperCase(),
-  };
-  await saveData();
-  document.getElementById('editModal').style.display='none';
-  document.body.style.overflow='';
-  editingId=null;
-  render();
 }
 
 loadData();
